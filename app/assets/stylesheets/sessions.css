@@ -7,4 +7,12 @@
 .btn-login {
   margin-top: 10px;
 }
+
+.checkbox-login {
+  width: auto;
+  margin-left: 25px;
+}
+.checkbox-login span {
+  font-weight: normal;
+}
 /*# sourceMappingURL=sessions.css.map */
