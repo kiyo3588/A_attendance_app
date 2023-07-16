@@ -21,4 +21,9 @@
 .btn-user--edit {
   margin-top: 10px;
 }
+
+/* ユーザー一覧ページ */
+#table-users td {
+  vertical-align: middle;
+}
 /*# sourceMappingURL=users.css.map */
