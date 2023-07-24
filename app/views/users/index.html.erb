@@ -25,7 +25,7 @@
             <%= user.name %>
           <% end %>
         </td>
-        <td class="center"><%= user.department.present? ? user.department : "未所属" %></td>
+        <td class="center"><%= user.affiliation.present? ? user.department : "未所属" %></td>
         <% if current_user.admin? %>
           <td class="center"><%= format_basic_info(user.basic_time) %></td>
           <td class="center"><%= format_basic_info(user.work_time) %></td>
