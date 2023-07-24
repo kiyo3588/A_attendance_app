@@ -14,7 +14,7 @@
         <tbody>
           <% @working_employees.each do |employee| %>
             <tr>
-              <td></td>
+              <td><%= employee.employee_number %></td>
               <td><%= employee.name %></td>
             </tr>    
           <% end %>
