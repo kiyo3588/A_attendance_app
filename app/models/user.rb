@@ -12,7 +12,7 @@ class User < ApplicationRecord
   validates :affiliation, length: { in: 2..30 }, allow_blank: true
   validates :employee_number, presence: true, uniqueness: true, format: { with: /\A\d+\z/, message: "は数字のみ使用できます" }, length: { maximum: 6 }
   validates :uid, presence: true, uniqueness: true
-  validates :basic_time, presence: true
+  validates :basic_work_time, presence: true
   validates :work_time, presence: true
   has_secure_password
   validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
