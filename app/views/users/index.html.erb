@@ -13,11 +13,11 @@
     <% @users.each do |user| %>
       <tr>
         <td>
-          <%= link_to user.name, user %><br>
+          <%= user.name %><br>
           <% unless current_user?(user) %>
             <%= link_to "削除", user, method: :delete,
-            data: { confirm: "削除してよろしいですか？" }, class: "btn btn-danger" %><br>
-            <%= link_to "基本情報編集", edit_basic_info_user_path(user), remote: true, class: "btn btn-success" %>
+            data: { confirm: "削除してよろしいですか？" }, class: "btn btn-primary" %><br>
+            <%= link_to "編集", edit_user_path(user), class: "btn btn-lg btn-primary" %>
           <% end %>
         </td>
       </tr>
@@ -25,5 +25,4 @@
   </table>
 </div>
 
-<!--モーダルウインドウ表示-->
-<div id="edit-basic-info" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+

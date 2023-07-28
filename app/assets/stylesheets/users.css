@@ -41,6 +41,10 @@
 /* ユーザー一覧ページ */
 #table-users td {
   vertical-align: middle;
+  padding-top: 10px;
+}
+#table-users .btn {
+  margin-top: 10px;
 }
 
 /* 基本情報編集モーダルウインドウ */
