@@ -10,18 +10,26 @@
       </tr>
     </thead>
 
-    <% @users.each do |user| %>
-      <tr>
-        <td>
-          <%= user.name %><br>
-          <% unless current_user?(user) %>
-            <%= link_to "削除", user, method: :delete,
-            data: { confirm: "削除してよろしいですか？" }, class: "btn btn-primary" %><br>
-            <%= link_to "編集", edit_user_path(user), class: "btn btn-lg btn-primary" %>
-          <% end %>
-        </td>
-      </tr>
-    <% end %>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td>
+            <%= user.name %>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <% unless current_user?(user) %>
+              <%= link_to "削除", user, method: :delete,
+              data: { confirm: "削除してよろしいですか？" }, class: "btn btn-primary" %>          
+          </td>
+        </tr>
+        <tr>
+          <td><%= link_to "編集", edit_user_path(user), class: "btn btn-lg btn-primary" %></td>
+        </tr>
+        <% end %>
+      <% end %>
+    </tbody>
   </table>
 </div>
 
