@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   get 'working_employees', to: 'users#working_employees', as: 'working_employees'
 
   resources :users do
+    collection { post :import} #CSVファイルインポート
+    
     member do
       get 'edit_basic_info'
       patch 'update_basic_info'

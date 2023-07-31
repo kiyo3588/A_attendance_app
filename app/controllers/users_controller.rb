@@ -34,7 +34,11 @@ class UsersController < ApplicationController
   def update
     if @user.update_attributes(user_params)
       flash[:success] = "ユーザー情報を更新しました。"
+      if params[:from] == 'user_list'
+        redirect_to users_path
+      else
       redirect_to @user
+      end
     else
       render :edit
     end
@@ -60,6 +64,12 @@ class UsersController < ApplicationController
 
   def working_employees
     @working_employees = User.joins(:attendances).where(attendances: { worked_on: Date.current }).where.not(attendances: { started_at: nil }).where(attendances: { finished_at: nil })
+  end
+
+  def import
+    User.import(params[:file])
+    flash[:success] = "ユーザーを追加しました。"
+    redirect_to users_path
   end
 
   private

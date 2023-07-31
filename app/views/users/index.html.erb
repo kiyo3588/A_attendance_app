@@ -4,6 +4,11 @@
 
 <div class="col-md-10 col-md-offset-1">
   <%= will_paginate %>
+  <%= form_with url: import_users_path, local: true do |f| %>  
+    <%= f.file_field :file %> <br>
+    <%= f.submit "CSVをインポート", class: "btn btn-md btn-primary" %>
+  <% end %>
+  
   <table class="table table-condensed table-hover" id="table-users">
     <thead>
       <tr>
@@ -32,6 +37,7 @@
             </button>
             <div id="editUser<%= user.id %>" class="collapse">
               <%= form_with(model: user, local: true) do |f| %>
+                <%= hidden_field_tag :from, 'user_list' %>
                 <%= render 'shared/error_messages', user: user %>
               
                 <%= f.label :name, class: "label-#{yield(:class_text)}" %>
