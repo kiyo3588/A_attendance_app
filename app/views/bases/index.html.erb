@@ -6,8 +6,8 @@
   <table class="table table-bordered">
     <thead>
       <tr>
-        <th></th>
-        <th></th>
+        <th class="action-cell"></th>
+        <th class="action-cell"></th>
         <th>拠点番号</th>
         <th>拠点名</th>
         <th>勤怠種類</th>
@@ -16,8 +16,8 @@
     <tbody>
       <% @bases.each do |base| %>
         <tr>
-          <td><%= link_to '編集', edit_basis_path(base) %></td> <!-- 編集ボタン -->
-          <td><%= link_to '削除', basis_path(base), method: :delete, data: { confirm: '本当に削除しますか？' } %></td>
+          <td class="action-cell"><%= link_to '修正', edit_basis_path(base), class: "btn  btn-edit btn-primary" %></td>
+          <td class="action-cell"><%= link_to '削除', basis_path(base), class: "btn btn-md btn-primary", method: :delete, data: { confirm: '本当に削除しますか？' } %></td>
           <td><%= base.base_number %></td>
           <td><%= base.base_name %></td>
           <td><%= base.base_type %></td>
@@ -26,5 +26,5 @@
     </tbody>
   </table>
 
-  <%= link_to '拠点情報追加', new_basis_path, class: 'btn btn-primary' %> <!-- 拠点追加ボタン -->
+  <%= link_to '拠点情報追加', new_basis_path, class: 'btn btn-lg btn-primary' %>
 </div>

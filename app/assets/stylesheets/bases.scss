@@ -1,3 +1,11 @@
 // Place all the styles related to the Bases controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.action-cell {
+  width: 300px; /* この値はお好みで調整してください */
+}
+
+.btn-edit {
+  width: 100px;
+}

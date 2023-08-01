@@ -1,0 +1,9 @@
+@charset "UTF-8";
+.action-cell {
+  width: 300px; /* この値はお好みで調整してください */
+}
+
+.btn-edit {
+  width: 100px;
+}
+/*# sourceMappingURL=bases.css.map */
