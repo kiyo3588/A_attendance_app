@@ -1,5 +1,10 @@
 ja:
   activerecord:
+    attributes:
+      base:
+        base_number: "拠点番号"
+        base_name: "拠点名"
+        base_type: "拠点種類"
     errors:
       messages:
         record_invalid: 'バリデーションに失敗しました: %{errors}'

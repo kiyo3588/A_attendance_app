@@ -1,0 +1,20 @@
+<% provide(:title, "新規拠点追加") %>
+
+<div class="container">
+  <h1>新規拠点追加</h1>
+  <%= form_with(model: @base, local: true) do |f| %>
+    <div class="form-group">
+      <%= f.label :base_number, "拠点番号" %>
+      <%= f.text_field :base_number, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= f.label :base_name, "拠点名" %>
+      <%= f.text_field :base_name, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= f.label :base_type, "拠点種類" %>
+      <%= f.select :base_type, ["出勤", "退勤"], {}, class: 'form-control', include_blank: true %>
+    </div>
+    <%= f.submit "追加", class: 'btn btn-primary' %>
+  <% end %>
+</div>
