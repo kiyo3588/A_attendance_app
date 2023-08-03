@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
     # アクセスしたユーザーが現在ログインしているユーザーか確認します。
     def correct_user
       @user = User.find(params[:id])
-      unless current_user?(@user) || current_user.admin?
+      if current_user.admin? || !current_user?(@user)
         redirect_to(root_url)
       end
     end
