@@ -7,7 +7,7 @@ class Attendance < ApplicationRecord
   validates :overtime_task, length: { maximum: 100 }
   validate :overtime_end_at_validity
 
-  enum overtime_status: { なし: 0, 申請中: 1, 承認: 2, 否認: 3 }
+  enum overtime_status: { none: 0, pending: 1, approved: 2, declined: 3 }
   # 出勤時間が存在しない場合、退勤時間は無効
   validate :finished_at_is_invalid_without_a_started_at
   # 出勤・退勤時間どちらも存在する時、出勤時間より早い退勤時間は無効

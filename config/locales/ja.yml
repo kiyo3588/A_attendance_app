@@ -1,6 +1,12 @@
 ja:
   activerecord:
     attributes:
+      attendance:
+        overtime_statuses:
+          none: "なし"
+          pending: "申請中"
+          approved: "承認"
+          declined: "否認"
       base:
         base_number: "拠点番号"
         base_name: "拠点名"
