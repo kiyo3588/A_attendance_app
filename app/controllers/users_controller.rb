@@ -4,6 +4,7 @@ class UsersController < ApplicationController
   before_action :correct_user, only: [:show, :edit, :update]
   before_action :admin_user, only: [:index, :destroy, :edit_basic_info, :update_basic_info, :working_employees]
   before_action :set_one_month, only: :show
+  before_action :set_superiors, only: [:show]
 
   def index
     @users = User.where(admin: false).paginate(page: params[:page])
@@ -81,6 +82,10 @@ class UsersController < ApplicationController
 
     def basic_info_params
       params.require(:user).permit(:affiliation, :basic_work_time, :work_time)
+    end
+
+    def set_superiors
+      @superiors = User.where(superior: true).where.not(id: current_user.id)
     end
 
 end

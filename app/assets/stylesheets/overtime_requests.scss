@@ -1,0 +1,18 @@
+
+.custom-modal .modal-dialog {
+  max-width: 100%; /* モーダルの最大幅を変更 */
+}
+
+.custom-modal .modal-content {
+  padding: 20px; /* モーダルの内部のパディングを調整 */
+}
+
+.time-input-container {
+  display: flex;
+  align-items: center;
+}
+
+.time-input {
+  margin-right: 5px;
+  margin-left: 5px;
+}

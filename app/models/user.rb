@@ -17,6 +17,9 @@ class User < ApplicationRecord
   has_secure_password
   validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
 
+   # 上長を取得するスコープ
+   scope :superiors, -> { where(superior: true) }
+
   # 渡された文字列のハッシュ値を返します。
   def User.digest(string)
     cost = 

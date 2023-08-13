@@ -80,7 +80,7 @@
       <% @attendances.each do |day| %>
         <tr>
           <td>
-            <%= link_to "残響申請", "#", class: "btn btn-primary" %>
+            <%= link_to "残業申請", "#overtimeModal-#{day.worked_on}", class: "btn btn-primary overtime-request-btn", "data-toggle" => "modal", data: { date: day.worked_on } %>
           </td>
           <td><%= l(day.worked_on, format: :short) %></td>
           <td class="<%= day.worked_on.strftime('%a').downcase %>">
@@ -108,7 +108,8 @@
           <td></td>
           <td></td>
           <td></td>
-          <td colspan="2"></td>     
+          <td colspan="2"></td>
+
       <% end %>
     </tbody>
 
@@ -143,4 +144,8 @@
       </tr>
     </tfoot>
   </table>
+
+  <% @attendances.each do |day| %>
+    <%= render partial: "overtime_requests/new_overtime_requests", locals: { day: day } %>
+  <% end %>
 </div>

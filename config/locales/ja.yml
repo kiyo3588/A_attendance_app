@@ -3,7 +3,7 @@ ja:
     attributes:
       attendance:
         overtime_statuses:
-          none: "なし"
+          no_request: "なし"
           pending: "申請中"
           approved: "承認"
           declined: "否認"

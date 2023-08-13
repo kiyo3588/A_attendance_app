@@ -1,0 +1,41 @@
+<%= form_with(model: day, local: true, url: overtime_request_path(day), method: :patch) do |f| %>
+  <div class="modal fade custom-modal" id="overtimeModal-<%= day.worked_on %>" tabindex="-1" role="dialog" aria-labelledby="overtimeModalLabel-<%= day.worked_on %>" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <h4>【残業申請】</h4>
+        <div class="table-responsive">
+          <table class="table table-condensed table-hover">
+            <thead>
+              <tr>
+                <th>日付</th>
+                <th>曜日</th>
+                <th colspan="2">終了予定時間</th>
+                <th>翌日</th>
+                <th>業務処理内容</th>
+                <th>指示者確認㊞</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><%= l(day.worked_on, format: :short) %></td>
+                <td><%= $days_of_the_week[day.worked_on.wday] %></td>
+                <td colspan="2">
+                  <div class="time-input-container">
+                    <%= f.text_field :end_hour, placeholder: '時', size: 2, class: 'time-input' %> 
+                    <span class="time-colon">:</span>
+                    <%= f.text_field :end_minute, placeholder: '分', size: 2, class: 'time-input' %>
+                  </div>
+                </td>
+                <td><%= f.check_box :next_day %></td>
+                <td><%= f.text_area :overtime_task, placeholder: '業務処理内容を入力' %></td>
+                <td><%= f.select :instructor_confirmation, @superiors.map { |u| [u.name, u.id] }, { prompt: "上長を選択" } %></td>
+                
+              </tr>
+            </tbody>
+          </table>
+          <%= f.submit '申請', class: 'btn btn-primary' %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
