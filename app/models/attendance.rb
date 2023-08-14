@@ -1,6 +1,9 @@
 class Attendance < ApplicationRecord
   belongs_to :user
 
+  # approverに関するアソシエーション
+  belongs_to :approver, class_name: "User", optional: true, foreign_key: "approver_id"
+
   validates :worked_on, presence: true
   validates :note, length: { maximum: 50 }
 
@@ -8,6 +11,8 @@ class Attendance < ApplicationRecord
   validate :overtime_end_at_validity
 
   enum overtime_status: { no_request: 0, pending: 1, approved: 2, declined: 3 }
+
+  enum request_type: { overtime: 'overtime', attendance: 'attendance' }
   # 出勤時間が存在しない場合、退勤時間は無効
   validate :finished_at_is_invalid_without_a_started_at
   # 出勤・退勤時間どちらも存在する時、出勤時間より早い退勤時間は無効
