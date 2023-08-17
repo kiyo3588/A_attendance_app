@@ -15,10 +15,4 @@ module AttendancesHelper
     format("%.2f", (((finish - start) / 60) / 60.0))
   end
 
-  def format_rounded_minutes(time)
-    minutes = time.min
-    rounded_minutes = (minutes / 15) * 15
-    rounded_minutes = [rounded_minutes, 45].min
-    rounded_minutes.to_s.rjust(2, '0')
-  end
 end

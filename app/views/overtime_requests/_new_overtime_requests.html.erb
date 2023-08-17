@@ -21,15 +21,12 @@
                 <td><%= $days_of_the_week[day.worked_on.wday] %></td>
                 <td colspan="2">
                   <div class="time-input-container">
-                    <%= f.text_field :end_hour, placeholder: '時', size: 2, class: 'time-input' %> 
-                    <span class="time-colon">:</span>
-                    <%= f.text_field :end_minute, placeholder: '分', size: 2, class: 'time-input' %>
+                    <%= f.time_select :overtime_end_at, {}, { class: 'time-input' } %>
                   </div>
                 </td>
                 <td><%= f.check_box :next_day %></td>
                 <td><%= f.text_area :overtime_task, placeholder: '業務処理内容を入力' %></td>
-                <td><%= f.select :approver_id, @superiors.map { |u| [u.name, u.id] }, { prompt: "上長を選択" } %></td>
-                
+                <td><%= f.select :approver_id, @superiors.map { |u| [u.name, u.id] }, { prompt: "上長を選択" } %></td>                
               </tr>
             </tbody>
           </table>

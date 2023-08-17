@@ -87,14 +87,14 @@
             <%= $days_of_the_week[day.worked_on.wday] %>
           </td>
           <td><%= l(day.started_at, format: :hour) if day.started_at.present? %></td>
-          <td><%= format_rounded_minutes(day.started_at) if day.started_at.present? %></td>
+          <td><%= l(day.started_at, format: :minute) if day.started_at.present? %></td>
           <td>
             <% if btn_text = attendance_state(day) %>
               <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
             <% end %>
           </td>
           <td><%= l(day.finished_at, format: :hour) if day.finished_at.present? %></td>
-          <td><%= format_rounded_minutes(day.finished_at) if day.finished_at.present? %></td>
+          <td><%= l(day.finished_at, format: :minute) if day.finished_at.present? %></td>
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>
               <% working_hours = ((day.finished_at - day.started_at) / 3600).to_i %>
@@ -104,10 +104,10 @@
             <% end %>
           </td>
           <td><%= day.note %></td>
+          <td><%= day.overtime_end_at ? day.overtime_end_at.strftime('%H') : '' %></td>
+          <td><%= day.overtime_end_at ? day.overtime_end_at.strftime('%M') : '' %></td>
           <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td><%= day.overtime_task ? day.overtime_task : '' %></td>
           <td colspan="2"></td>
 
       <% end %>

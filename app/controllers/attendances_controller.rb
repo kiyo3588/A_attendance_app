@@ -35,12 +35,20 @@ class AttendancesController < ApplicationController
     ActiveRecord::Base.transaction do
       attendances_params.each do |id, item|
         attendance = Attendance.find(id)
+
+        started_hour, started_min = extract_time_from(item[:started_at])
+        item[:started_at] = attendance.worked_on.to_time.change(hour: started_hour, min: started_min)
+        
+        finished_hour, finished_min = extract_time_from(item[:finished_at])
+        item[:finished_at] = attendance.worked_on.to_time.change(hour: finished_hour, min: finished_min)
+        
         if item[:started_at].present? && item[:finished_at].blank?
           errors << "退社時間が未入力です。"
         elsif item[:started_at].blank? && item[:finished_at].present?
           errors << "出社時間が未入力です。"
         else
-         attendance.update!(item)
+          attendance.update!(item)
+        end
       end
     end
   
@@ -53,6 +61,7 @@ class AttendancesController < ApplicationController
     end
     rescue => e
       flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
+      flash[:danger] = "エラー: #{e.message}"
       redirect_to attendances_edit_one_month_user_url(date: params[:date])
     end
   end
@@ -71,6 +80,12 @@ class AttendancesController < ApplicationController
       unless current_user?(@user) || current_user.admin?
         flash[:danger] = "編集権限がありません。"
         redirect_to(root_url)
-      end
+    end
+
+    def extract_time_from(time_string)
+
+      hour, minute = time_string.split(":").map(&:to_i)
+      puts "Extracted time: #{[hour, minute]}"
+      return hour, minute
     end
 end

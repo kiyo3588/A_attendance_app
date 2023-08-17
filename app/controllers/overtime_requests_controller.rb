@@ -1,28 +1,31 @@
 class OvertimeRequestsController < ApplicationController
-  before_action :set_superiors, only: [:update]
+  before_action :set_superiors, only: [:new, :update]
+
+  def new
+    @attendance = Attendance.new
+  end
 
   def update
-    @attendance = Attendance.find(params[:id])  
-  
-     # 終了予定時間を組み合わせてDateTimeオブジェクトを作成
-     end_hour = params[:attendance][:end_hour].to_i
-     end_minute = params[:attendance][:end_minute].to_i
-     date = @attendance.worked_on
-  
-    # 翌日の場合、時間を1日追加
-    if params[:attendance][:next_day] == "1"
-      date += 1.day
-    end
+    @attendance = Attendance.find(params[:id]) 
 
-    @attendance.overtime_end_at = date.change(hour: end_hour, min: end_minute)
+    worked_on_datetime = @attendance.worked_on.to_datetime
+    year = worked_on_datetime.year
+    month = worked_on_datetime.month
+    day = worked_on_datetime.day
 
-    # 申請のステータスとリクエストのタイプを設定
+    hour = params[:attendance]["overtime_end_at(4i)"].to_i
+    minute = params[:attendance]["overtime_end_at(5i)"].to_i
+
+    overtime_end_at = @attendance.worked_on.in_time_zone.change(hour: hour, min: minute)
+
+    @attendance.overtime_end_at = overtime_end_at
+    @attendance.assign_attributes(attendance_params)
     @attendance.overtime_status = 'pending'
     @attendance.request_type = 'overtime'
   
-    if @attendance.update(attendance_params)
+    if @attendance.save
       # 成功時の処理
-      redirect_to "#", notice: "残業申請が成功しました。"
+      redirect_to user_path(current_user), notice: "残業申請が成功しました。"
     else
       # エラー時の処理
       render :edit, alert: "残業申請に失敗しました。"
@@ -30,9 +33,9 @@ class OvertimeRequestsController < ApplicationController
   end
   
   private
-  
+
   def attendance_params
-    params.require(:attendance).permit(:overtime_task, :approver_id, :request_type, :end_hour, :end_minute, :next_day)
+    params.require(:attendance).permit(:overtime_task, :approver_id, :request_type)
   end
 
   def set_superiors
