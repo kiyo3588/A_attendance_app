@@ -26,6 +26,7 @@ Rails.application.routes.draw do
   resources :bases
 
   resources :overtime_requests, only: [:new, :create] do
+
     member do
       patch :update
     end

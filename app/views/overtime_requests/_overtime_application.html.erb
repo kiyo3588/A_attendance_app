@@ -1,0 +1,30 @@
+<!-- モーダルの内容 -->
+
+<div class="modal fade" id="overtimeCheckModal" tabindex="-1" role="dialog" aria-labelledby="overtimeCheckModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <!-- モーダルのヘッダー -->
+      <div class="modal-header">      
+        <h5 class="modal-title" id="overtimeCheckModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="閉じる">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!-- モーダルのボディ -->
+      <div class="modal-body">
+        <!-- ここに申請内容や申請者の情報などを表示 -->
+        <% @overtime_requests.group_by(&:user).each do |user, requests| %>
+          <h2>【<%= user.name %>からの申請】</h2>
+          <!-- ここにそのユーザーの申請内容を表示（例: 日付や申請時間など） -->
+          <% requests.each do |request| %>
+            <p><%= request.worked_on %>: <%= request.overtime_end_at %></p>
+          <% end %>
+        <% end %>
+      </div>
+      <!-- モーダルのフッター -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+      </div>
+    </div>
+  </div>
+</div>

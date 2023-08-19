@@ -39,7 +39,7 @@ class OvertimeRequestsController < ApplicationController
       render :edit
     end
   end
-  
+
   private
 
   def attendance_params
