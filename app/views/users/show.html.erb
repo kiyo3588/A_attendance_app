@@ -30,7 +30,10 @@
       <%= link_to "【勤怠変更のお知らせ】", "#", class: "btn" %>
     </div>
     <div>
-      <%= link_to "【残業申請のお知らせ】", "#", class: "btn" %>
+      <%= link_to "【残業申請のお知らせ】", "#", class: "btn notification-link" %>
+      <% if @unapproved_overtime_requests > 0 %>
+        <span class="notification-count"><%= @unapproved_overtime_requests %>件の通知があります</span>
+      <% end %>
     </div>
   <% end %>
 

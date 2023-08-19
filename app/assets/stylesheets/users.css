@@ -53,4 +53,16 @@
   margin: 15px 0;
   width: 30%;
 }
+
+.notification-link {
+  color: red;
+}
+
+.notification-count {
+  color: red;
+  font-weight: bold;
+  border: 1px solid red;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
 /*# sourceMappingURL=users.css.map */

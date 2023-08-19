@@ -13,6 +13,8 @@ class UsersController < ApplicationController
   def show
     @worked_sum = @attendances.where.not(started_at: nil).count
     @attendances = @user.attendances.where(worked_on: '2023-08-01'..'2023-08-31').order(:worked_on)
+
+    @unapproved_overtime_requests = Attendance.where(approver_id: @user.id, overtime_status: Attendance.overtime_statuses[:overtime_pending]).count
   end
 
   def new
