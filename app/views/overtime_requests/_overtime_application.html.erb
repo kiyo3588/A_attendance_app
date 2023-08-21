@@ -1,10 +1,11 @@
 <div class="modal fade" id="overtimeCheckModal" tabindex="-1" role="dialog" aria-labelledby="overtimeCheckModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content"> 
+    <%= form_for :overtime_request, url: approve_overtime_overtime_request_path, method: :patch do |f| %>
       <% @overtime_requests.group_by(&:user).each do |user, requests| %>
           <h4>【<%= user.name %>からの申請】</h4>
         <div class="table-responsive"> 
-          <% requests.each do |overtime_request| %>  
+           
             <table class="table table-condensed table-hover">  
               <thead>  
                 <tr>
@@ -20,6 +21,7 @@
                 </tr>
               </thead>
               <tbody> 
+              <% requests.each do |overtime_request| %> 
                   <tr>
                     <td><%= overtime_request.worked_on.strftime("%-m/%-d") %></td>  
                     <td><%= $days_of_the_week[overtime_request.worked_on.wday] %></td>
@@ -33,7 +35,6 @@
                     <td></td>
                     <td></td>
                     <td><%= overtime_request.overtime_task %></td>
-              <%= form_for overtime_request, url: approve_overtime_overtime_request_path(overtime_request), method: :patch do |f| %>
                       <td>
                         <%= f.select :overtime_status, {'なし' => 'overtime_no_request',
                                                         '申請中' => 'overtime_pending',
@@ -44,16 +45,15 @@
                       <td><%= f.check_box :overtime_check %></td>
                       <td><%= f.submit '確認', class: 'btn btn-primary' %></td>
                   </tr>    
-                    
+              <% end %>
               </tbody>      
             </table>
-              <%= f.submit '変更を送信する', class: 'btn btn-primary btn-lg' %> 
-            <% end %>
-          <% end %> 
-        <% end %>       
-      </div>     
+        </div>
+      <% end %> 
+      <div class="text-center">
+        <%= f.submit '変更を送信する', class: 'btn btn-primary btn-lg' %> 
+      </div>
+    <% end %>          
     </div>
   </div>
 </div>
-
-
