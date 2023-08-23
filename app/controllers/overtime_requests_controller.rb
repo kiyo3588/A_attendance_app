@@ -46,7 +46,7 @@ class OvertimeRequestsController < ApplicationController
   private
 
   def attendance_params
-    params.require(:attendance).permit(:worked_on, :overtime_task, :approver_id, :overtime_end_at, :next_day)
+    params.require(:attendance).permit(:worked_on, :overtime_task, :overtime_approver_id, :overtime_end_at, :next_day)
   end
 
   def approve_overtime_params

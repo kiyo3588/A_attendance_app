@@ -26,7 +26,7 @@
                 </td>
                 <td><%= f.check_box :next_day %></td>
                 <td><%= f.text_area :overtime_task, placeholder: '業務処理内容を入力' %></td>
-                <td><%= f.select :approver_id, @superiors.map { |u| [u.name, u.id] }, { prompt: "上長を選択" } %></td>                
+                <td><%= f.select :overtime_approver_id, @superiors.map { |u| [u.name, u.id] }, { prompt: "上長を選択" } %></td>                
               </tr>
             </tbody>
           </table>
