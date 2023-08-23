@@ -32,8 +32,21 @@
                         <%= overtime_request.overtime_end_at.strftime("%H:%M") if overtime_request.overtime_end_at.present? %>
                       <% end %>
                     </td>
-                    <td></td>
-                    <td></td>
+                    <td><%= overtime_request.user.designated_work_end_time.strftime("%H:%M") if overtime_request.user.designated_work_end_time.present? %></td>
+                    <%
+                    designated_end_time_corrected_date = overtime_request.user.designated_work_end_time.change(year: overtime_request.worked_on.year, month: overtime_request.worked_on.month, day: overtime_request.worked_on.day)
+                    
+                    overtime_duration = overtime_request.overtime_end_at - designated_end_time_corrected_date
+                    overtime_hours = (overtime_duration / 3600).to_i
+                    overtime_minutes = ((overtime_duration % 3600) / 60).to_i
+                    %>
+                    <td>
+                      <% if overtime_duration < 0 %>
+                        -<%= '%.2f' % (overtime_hours.abs + overtime_minutes.abs / 60.0) %>
+                      <% else %>
+                        <%= '%.2f' % (overtime_hours + overtime_minutes / 60.0) %>
+                      <% end %>
+                    </td>
                     <td><%= overtime_request.overtime_task %></td>
                       <td>
                         <%= f.select :overtime_status, {'なし' => 'overtime_no_request',

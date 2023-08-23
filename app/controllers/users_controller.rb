@@ -19,11 +19,12 @@ class UsersController < ApplicationController
   end
 
   def new
-    @user = User.new
+    @user = User.new(user_params)
   end
 
   def create
     @user = User.new(user_params)
+    set_designated_times_for_user(@user) if @user.designated_work_start_time.nil? && @user.designated_work_end_time.nil?
     if @user.save
       log_in @user
       flash[:success] = '新規作成に成功しました。'
@@ -79,9 +80,8 @@ class UsersController < ApplicationController
 
   private
 
-
     def user_params
-      params.require(:user).permit(:name, :email, :affiliation, :password, :password_confirmation, :employee_number, :uid, :designated_work_start_time, :designated_work_end_time)
+      params.require(:user).permit(:name, :email, :affiliation, :password, :password_confirmation, :employee_number, :uid, :basic_work_time, :designated_work_start_time, :designated_work_end_time)
     end
 
     def basic_info_params
@@ -92,4 +92,8 @@ class UsersController < ApplicationController
       @superiors = User.where(superior: true).where.not(id: current_user.id)
     end
 
+    def set_designated_times_for_user(user)
+      user.designated_work_start_time = Time.current.change(hour: 9, min: 0, sec: 0)
+      user.designated_work_end_time = Time.current.change(hour: 18, min: 0, sec: 0)
+    end
 end
