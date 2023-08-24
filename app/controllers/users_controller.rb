@@ -11,9 +11,15 @@ class UsersController < ApplicationController
   end
 
   def show
+    if params[:date]
+      @first_day = Date.parse(params[:date]).beginning_of_month
+    else
+      @first_day = Date.current.beginning_of_month
+    end
+    
+    @attendances = @user.attendances.where(worked_on: @first_day..@first_day.end_of_month).order(:worked_on)
     @worked_sum = @attendances.where.not(started_at: nil).count
-    @attendances = @user.attendances.where(worked_on: '2023-08-01'..'2023-08-31').order(:worked_on)
-
+  
     @unapproved_overtime_requests = Attendance.where(overtime_approver_id: @user.id, overtime_status: Attendance.overtime_statuses[:overtime_pending]).count
     @overtime_requests = Attendance.where(overtime_approver_id: current_user.id, overtime_status: "overtime_pending")
   end
