@@ -36,18 +36,29 @@ class AttendancesController < ApplicationController
       attendances_params.each do |id, item|
         attendance = Attendance.find(id)
 
-        started_hour, started_min = extract_time_from(item[:started_at])
-        item[:started_at] = attendance.worked_on.to_time.change(hour: started_hour, min: started_min)
-        
+        started_hour, started_min = extract_time_from(item[:started_at])        
         finished_hour, finished_min = extract_time_from(item[:finished_at])
-        item[:finished_at] = attendance.worked_on.to_time.change(hour: finished_hour, min: finished_min)
-        
-        if item[:started_at].present? && item[:finished_at].blank?
-          errors << "退社時間が未入力です。"
-        elsif item[:started_at].blank? && item[:finished_at].present?
-          errors << "出社時間が未入力です。"
+
+        if started_hour.nil?
+          item[:started_at] = nil
         else
-          attendance.update!(item)
+          item[:started_at] = attendance.worked_on.to_time.change(hour: started_hour, min: started_min)
+        end
+
+        if finished_hour.nil?
+          item[:finished_at] = nil
+        else
+          item[:finished_at] = attendance.worked_on.to_time.change(hour: finished_hour, min: finished_min)
+        end
+
+        if item[:started_at].present? && item[:finished_at].blank?
+          errors << "#{attendance.worked_on}の退社時間が未入力です。"
+        elsif item[:started_at].blank? && item[:finished_at].present?
+          errors << "#{attendance.worked_on}の出社時間が未入力です。"
+        else
+          attendance.started_at = item[:started_at]
+          attendance.finished_at = item[:finished_at]
+          attendance.save!
         end
       end
     end
@@ -65,6 +76,14 @@ class AttendancesController < ApplicationController
       redirect_to attendances_edit_one_month_user_url(date: params[:date])
     end
   end
+
+  def extract_time_from(time_string)
+    return [nil, nil] if time_string.blank?
+
+    hour, minute = time_string.split(":").map(&:to_i)
+    puts "Extracted time: #{[hour, minute]}"
+    return hour, minute
+end
 
   private
     # 1ヶ月分の勤怠情報を扱います。
