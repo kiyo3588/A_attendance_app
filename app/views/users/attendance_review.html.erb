@@ -1,0 +1,107 @@
+<h1><%= @user.name %>の勤怠確認</h1>
+
+<div>
+  <table class="table table-borderd table-condensed user-table"> 
+    <tr>
+      <td colspan="2"><%= l(@first_day, format: :middle) %>時間管理表</td>
+      <td>指定勤務開始時間<%= @user.designated_work_start_time.strftime("%H:%M") %><br>指定勤務終了時間 <%= @user.designated_work_end_time.strftime("%H:%M") %></td>
+      <td colspan="2">基本時間：<%= format_basic_info(@user.basic_work_time) %></td>
+      <td>初日：<%= l(@first_day, format: :short) %></td>
+    </tr>
+
+    <tr>
+      <td colspan="2">所属：<%= @user.affiliation.present? ? @user.affiliation : "未所属" %></td>
+      <td>氏名：<%= @user.name %></td>
+      <td>コード：<%= @user.employee_number %></td>
+      <td>出勤日数： <%= @worked_sum %>日</td>
+      <td>締め：<%= l(@last_day, format: :short) %></td>
+    </tr>
+  </table>
+</div>
+
+<div>
+  <% total_working_hours = 0.0 %>
+  <table class="table table-bordered table-condensed table-hover" id="table-attendances">
+    <thead>
+      <tr>
+      <th rowspan="3">残業申請</th>
+      <th rowspan="3">日付</th>
+      <th rowspan="3">曜日</th>
+      <th colspan="8">【実績】</th>
+      <th colspan="5">所定外勤務</th>
+      </tr>
+      <tr>
+        <th colspan="2">出社</th>
+        <th></th>
+        <th colspan="2">退社</th>
+        <th rowspan="2">在社時間</th>
+        <th rowspan="2">備考</th>
+        <th colspan="2">終了予定時間</th>
+        <th rowspan="2">時間外時間</th>
+        <th rowspan="2">業務処理内容</th>
+        <th rowspan="2", colspan="2">指示書確認㊞</th>
+      </tr>
+      <tr>
+        <th>時</th>
+        <th>分</th>
+        <th></th>
+        <th>時</th>
+        <th>分</th>
+        <th>時</th>
+        <th>分</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @attendances.each do |day| %>
+        <tr>
+          <td></td>
+          <td><%= l(day.worked_on, format: :short) %></td>
+          <td class="<%= day.worked_on.strftime('%a').downcase %>">
+            <%= $days_of_the_week[day.worked_on.wday] %>
+          </td>
+          <td><%= l(day.started_at, format: :hour) if day.started_at.present? %></td>
+          <td><%= l(day.started_at, format: :minute) if day.started_at.present? %></td>
+          <td></td>
+          <td><%= l(day.finished_at, format: :hour) if day.finished_at.present? %></td>
+          <td><%= l(day.finished_at, format: :minute) if day.finished_at.present? %></td>
+          <td>
+            <% if day.started_at.present? && day.finished_at.present? %>
+              <% working_hours = ((day.finished_at - day.started_at) / 3600).to_i %>
+              <% working_minutes = ((day.finished_at - day.started_at) / 60).to_i % 60 %>
+              <% total_working_hours += working_hours + working_minutes / 60.0 %>
+              <%= format("%d:%02d", working_hours, working_minutes) %> <!-- 時:分 の形式で出力 -->
+            <% end %>
+          </td>
+          <td><%= day.note %></td>
+          <td>
+          </td>
+          <td><%= day.overtime_end_at ? day.overtime_end_at.strftime('%M') : '' %></td>
+          <td>
+          </td>
+          <td><%= day.overtime_task ? day.overtime_task : '' %></td>
+          <td colspan="2">
+          <% attendance_status_text = case day.attendance_status
+            when "attendance_pending" then "勤怠編集申請中"
+            when "attendance_approved" then "勤怠編集承認済"
+            when "attendance_declined" then "勤怠編集否認"
+            else ""
+            end %>
+      
+          <% overtime_status_text = case day.overtime_status
+            when "overtime_pending" then "残業申請中"
+            when "overtime_approved" then "残業申請承認済"
+            when "overtime_declined" then "残業申請否認"
+            else ""
+            end %>
+      
+        <%= [overtime_status_text, attendance_status_text].reject(&:empty?).join("：") %>
+        </td>
+        </tr>
+          
+      <% end %>
+    </tbody>
+    
+  </table>
+</div>
+<button onclick="history.back();" class="btn btn-primary">閉じる</button>

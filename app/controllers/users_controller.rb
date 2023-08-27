@@ -84,6 +84,22 @@ class UsersController < ApplicationController
     redirect_to users_path
   end
 
+  def attendance_review
+    # ここで該当ユーザーの勤怠データを取得します。
+    @user = User.find(params[:id])
+    
+    # 勤怠データの取得や処理のロジックを記述します。
+    # 例: 1か月分の勤怠データの取得
+    if params[:date]
+      @first_day = Date.parse(params[:date]).beginning_of_month
+    else
+      @first_day = Date.current.beginning_of_month
+    end
+    
+    @last_day = @first_day.end_of_month
+    @attendances = @user.attendances.where(worked_on: @first_day..@first_day.end_of_month).order(:worked_on)
+  end
+
   private
 
     def user_params

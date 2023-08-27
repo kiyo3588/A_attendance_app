@@ -116,7 +116,20 @@
           <% end %>
           </td>
           <td><%= day.overtime_end_at ? day.overtime_end_at.strftime('%M') : '' %></td>
-          <td></td>
+          <td>
+          <% if day.overtime_end_at.present? %>
+            <% designated_end_time_corrected_date = @user.designated_work_end_time.change(year: day.worked_on.year, month: day.worked_on.month, day: day.worked_on.day) %>
+            <% overtime_duration = day.overtime_end_at - designated_end_time_corrected_date %>
+            <% overtime_hours = (overtime_duration / 3600).to_i %>
+            <% overtime_minutes = ((overtime_duration % 3600) / 60).to_i %>
+            
+            <% if overtime_duration < 0 %>
+                -<%= '%.2f' % (overtime_hours.abs + overtime_minutes.abs / 60.0) %>
+            <% else %>
+                <%= '%.2f' % (overtime_hours + overtime_minutes / 60.0) %>
+            <% end %>
+          <% end %>
+          </td>
           <td><%= day.overtime_task ? day.overtime_task : '' %></td>
           <td colspan="2">
           <% attendance_status_text = case day.attendance_status
@@ -135,6 +148,7 @@
       
         <%= [overtime_status_text, attendance_status_text].reject(&:empty?).join("：") %>
         </td>
+      </tr>
       <% end %>
     </tbody>
 

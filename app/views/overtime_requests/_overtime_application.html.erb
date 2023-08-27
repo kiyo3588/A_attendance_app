@@ -56,7 +56,7 @@
                                                         }, {}, { class: 'form-control' } %>
                       </td>
                       <td><%= f.check_box :overtime_check %></td>
-                      <td><%= link_to '確認' ,"#", class: 'btn btn-primary' %></td>
+                      <td><%= link_to '確認', attendance_review_user_path(overtime_request.user), class: 'btn btn-primary' %></td>
                   </tr>    
               <% end %>
               </tbody>      
