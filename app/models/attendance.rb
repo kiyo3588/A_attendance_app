@@ -2,7 +2,9 @@ class Attendance < ApplicationRecord
   belongs_to :user
 
   # approverに関するアソシエーション
-  belongs_to :approver, class_name: "User", optional: true, foreign_key: "overtime_approver_id"
+  belongs_to :overtime_approver, class_name: "User", optional: true, foreign_key: "overtime_approver_id"
+  belongs_to :monthly_approval_approver, class_name: "User", optional: true, foreign_key: "monthly_approval_approver_id"
+  belongs_to :attendance_approver, class_name: "User", optional: true, foreign_key: "attendance_approver_id"
 
   validates :worked_on, presence: true
   validates :note, length: { maximum: 50 }
@@ -21,6 +23,13 @@ enum overtime_status: {
   overtime_pending: 1, 
   overtime_approved: 2, 
   overtime_declined: 3 
+}
+
+enum monthly_approval_status: {
+  monthly_approval_no_request: 0, 
+  monthly_approval_pending: 1, 
+  monthly_approval_approved: 2, 
+  monthly_approval_declined: 3 
 }
 
   # 出勤時間が存在しない場合、退勤時間は無効
