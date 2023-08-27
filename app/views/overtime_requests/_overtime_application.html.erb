@@ -63,12 +63,8 @@
             </table>
         </div>
       <% end %> 
-      <div class="text-center">
-        <% if @overtime_requests.blank? %>
-          <p>申請はありません</p>
-        <% else %>
-          <%= f.submit '変更を送信する', class: 'btn btn-primary btn-lg' %> 
-        <% end %>
+      <div class="text-center">      
+        <%= f.submit '変更を送信する', class: 'btn btn-primary btn-lg' %>     
       </div>
     <% end %>          
     </div>
