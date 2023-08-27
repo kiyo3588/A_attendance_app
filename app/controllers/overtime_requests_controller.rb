@@ -41,6 +41,16 @@ class OvertimeRequestsController < ApplicationController
   end
 
   def approve_overtime
+    params[:overtime_requests].each do |id, overtime_request_params|
+      attendance = Attendance.find(id)
+
+      if overtime_request_params["overtime_check"] == "1"
+        attendance.update(overtime_status: overtime_request_params["overtime_status"])
+      end
+    end
+
+    flash[:success] = "変更を保存しました"
+    redirect_to user_path(current_user)
   end
 
   private

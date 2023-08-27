@@ -4,8 +4,7 @@
     <%= form_for :overtime_request, url: approve_overtime_overtime_request_path, method: :patch do |f| %>
       <% @overtime_requests.group_by(&:user).each do |user, requests| %>
           <h4>【<%= user.name %>からの申請】</h4>
-        <div class="table-responsive"> 
-           
+        <div class="table-responsive">            
             <table class="table table-condensed table-hover">  
               <thead>  
                 <tr>
@@ -21,7 +20,8 @@
                 </tr>
               </thead>
               <tbody> 
-              <% requests.each do |overtime_request| %> 
+              <% requests.each do |overtime_request| %>
+                <%= fields_for "overtime_requests[#{overtime_request.id}]", overtime_request do |or_fields| %>
                   <tr>
                     <td><%= overtime_request.worked_on.strftime("%-m/%-d") %></td>  
                     <td><%= $days_of_the_week[overtime_request.worked_on.wday] %></td>
@@ -49,15 +49,16 @@
                     </td>
                     <td><%= overtime_request.overtime_task %></td>
                       <td>
-                        <%= f.select :overtime_status, {'なし' => 'overtime_no_request',
-                                                        '申請中' => 'overtime_pending',
-                                                        '承認' => 'overtime_approved',
-                                                        '否認' => 'overtime_declined'
-                                                        }, {}, { class: 'form-control' } %>
+                        <%= or_fields.select :overtime_status, {'なし' => 'overtime_no_request',
+                                                                '申請中' => 'overtime_pending',
+                                                                '承認' => 'overtime_approved',
+                                                                '否認' => 'overtime_declined'
+                                                                }, {}, { class: 'form-control' } %>
                       </td>
-                      <td><%= f.check_box :overtime_check %></td>
+                      <td><%= or_fields.check_box :overtime_check %></td>
                       <td><%= link_to '確認', attendance_review_user_path(overtime_request.user), class: 'btn btn-primary' %></td>
-                  </tr>    
+                  </tr> 
+                <% end %>   
               <% end %>
               </tbody>      
             </table>
