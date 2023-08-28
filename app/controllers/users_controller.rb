@@ -22,6 +22,8 @@ class UsersController < ApplicationController
   
     @unapproved_overtime_requests = Attendance.where(overtime_approver_id: @user.id, overtime_status: Attendance.overtime_statuses[:overtime_pending]).count
     @overtime_requests = Attendance.where(overtime_approver_id: current_user.id, overtime_status: "overtime_pending")
+
+    @superiors = User.where(superior: true).where.not(id: current_user.id)
   end
 
   def new
