@@ -25,20 +25,27 @@
 <div class="btn-users-show">
   <% if current_user.superior? %>
     <div>
-      <%= link_to "【所属長承認申請のおしらせ】", "#", class: "btn" %>
+      <% if @monthly_approval_requests.present? %>
+        <%= link_to "【所属長承認申請のおしらせ】", "#monthlyApprovalCheckModal", class: "btn #{'notification-link' if @unapproved_monthly_requests > 0}", data: { toggle: 'modal' } %>
+        <%if @unapproved_monthly_requests > 0 %>  
+          <span class="notification-count"><%= @unapproved_monthly_requests %>件の通知があります</span>
+        <% end %>
+      <% else %>
+        <%= link_to "【所属長承認申請のおしらせ】", "#", class: "btn" %>
+      <% end %>
     </div>
     <div>
       <%= link_to "【勤怠変更のお知らせ】", "#", class: "btn" %>
     </div>
     <div>
-    <% if @overtime_requests.present? %>
-      <%= link_to "【残業申請のお知らせ】", "#overtimeCheckModal", class: "btn #{'notification-link' if @unapproved_overtime_requests > 0}", data: { toggle: 'modal' } %>
-      <% if @unapproved_overtime_requests > 0 %>
-        <span class="notification-count"><%= @unapproved_overtime_requests %>件の通知があります</span>
+      <% if @overtime_requests.present? %>
+        <%= link_to "【残業申請のお知らせ】", "#overtimeCheckModal", class: "btn #{'notification-link' if @unapproved_overtime_requests > 0}", data: { toggle: 'modal' } %>
+        <% if @unapproved_overtime_requests > 0 %>
+          <span class="notification-count"><%= @unapproved_overtime_requests %>件の通知があります</span>
+        <% end %>
+      <% else %>
+      <%= link_to "【残業申請のお知らせ】", "#", class: "btn" %>
       <% end %>
-    <% else %>
-    <%= link_to "【残業申請のお知らせ】", "#", class: "btn" %>
-    <% end %>
     </div>    
   <% end %>
 
@@ -168,18 +175,34 @@
         <td colspan="5"></td>
         <td rowspan="2">
           <div class="mb-2">
-            所属承認：<span class="badge badge-secondary">未</span> <!-- ここは動的に変わる部分なので、適切に設定してください -->
+            所属長承認：
+            <% case @monthly_approval_status %>
+            <% when "未" %>
+              <span>未</span>
+            <% when "申請中" %>
+              <span><%= @monthly_approval_approvers.map(&:name).join(", ") %>へ 申請中</span>
+            <% when "承認済み" %>
+              <span><%= @monthly_approval_approvers.map(&:name).join(", ") %>から 承認済み</span>
+            <% when "否認" %>
+              <span><%= @monthly_approval_approvers.map(&:name).join(", ") %>から 否認</span>
+            <% else %>
+              <span class="badge badge-secondary"><%= @monthly_approval_status %></span>
+            <% end %>
           </div>
-          <div class="mb-2">
-            <select class="form-control" name="superior_user_id">
-              <% @superiors.each do |superior| %>
-                <option value="<%= superior.id %>"><%= superior.name %></option>
-              <% end %>
-            </select>
-          </div>
-          <div>
-            <%= button_to "申請", "#", method: :post, class: "btn btn-md btn-primary" %> <!-- リンク先やメソッドを適切に設定してください -->
-          </div>
+            <%= form_with(url: monthly_approvals_path, method: :post, local: true) do %>
+              <%= hidden_field_tag :first_day, @first_day %>
+              <div class="mb-2">
+                <select class="form-control" name="superior_user_id">
+                  <option value=""></option>
+                  <% @superiors.each do |superior| %>
+                    <option value="<%= superior.id %>"><%= superior.name %></option>
+                  <% end %>
+                </select>
+              </div>
+              <div>
+                <%= submit_tag "申請", class: "btn btn-primary full-size-btn" %>
+              </div>
+            <% end %>        
         </td>
       </tr>
       <tr>
@@ -195,5 +218,6 @@
     <%= render partial: "overtime_requests/new_overtime_requests", locals: { day: day } %>
   <% end %>    
 
+  <%= render partial: "monthly_approvals/monthly_application" %>
   <%= render partial: "overtime_requests/overtime_application" %>
 </div>

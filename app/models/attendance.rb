@@ -32,6 +32,8 @@ enum monthly_approval_status: {
   monthly_approval_declined: 3 
 }
 
+scope :monthly_approval_pending, -> { where(monthly_approval_status: "monthly_approval_pending") }
+scope :first_day_of_month, -> { where("strftime('%d', worked_on) = '01'") }
   # 出勤時間が存在しない場合、退勤時間は無効
   validate :finished_at_is_invalid_without_a_started_at
   # 出勤・退勤時間どちらも存在する時、出勤時間より早い退勤時間は無効

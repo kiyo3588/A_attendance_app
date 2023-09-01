@@ -1,0 +1,44 @@
+<div class="modal fade" id="monthlyApprovalCheckModal" tabindex="-1" role="dialog" aria-labelledby="monthlyApprovalCheckModal" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    <% @grouped_monthly_approval_requests.each do |user, requests| %>
+      <div class="modal-header">
+        <h4 class="modal-title">【<%= user.name %>からの1カ月分勤怠申請】</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>月</th>
+              <th>指示者確認</th>
+              <th>変更</th>
+              <th>勤怠を確認する</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% requests.each do |request| %>
+              <tr>
+                <td><%= request.worked_on.strftime("%m月") %></td>
+                <td>
+                  <select name="monthly_approval_status">
+                    <option value="no_request" <%= 'selected' if request.monthly_approval_status == 'no_request' %>>なし</option>
+                    <option value="pending" <%= 'selected' if request.monthly_approval_status == 'pending' %>>申請中</option>
+                    <option value="approved" <%= 'selected' if request.monthly_approval_status == 'approved' %>>承認</option>
+                    <option value="declined" <%= 'selected' if request.monthly_approval_status == 'declined' %>>否認</option>
+                  </select>
+                </td>
+                <td><input type="checkbox" name="change_approval_<%= request.id %>"></td>
+                <td><%= link_to "確認", user_attendance_path(request.user, request), class: "btn btn-primary" %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+        <button type="submit" class="btn btn-primary">更新する</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -32,4 +32,6 @@ Rails.application.routes.draw do
       patch :approve_overtime
     end
   end
+
+  resources :monthly_approvals, only: [:create, :update]
 end

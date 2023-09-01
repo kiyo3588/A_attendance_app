@@ -19,11 +19,35 @@ class UsersController < ApplicationController
     
     @attendances = @user.attendances.where(worked_on: @first_day..@first_day.end_of_month).order(:worked_on)
     @worked_sum = @attendances.where.not(started_at: nil).count
-  
-    @unapproved_overtime_requests = Attendance.where(overtime_approver_id: @user.id, overtime_status: Attendance.overtime_statuses[:overtime_pending]).count
+
+    @monthly_approval_requests = Attendance.where(monthly_approval_approver_id: current_user.id, 
+                                              monthly_approval_status: "monthly_approval_pending")
+                                      .group_by { |m| [m.user_id, m.worked_on.beginning_of_month] }
+                                      .map { |key, values| values.find { |v| v.worked_on == key[1] } }
+    @unapproved_monthly_requests = Attendance.where(monthly_approval_approver_id: current_user.id, monthly_approval_status: "monthly_approval_pending")
+                                              .where(worked_on: Attendance.where(monthly_approval_approver_id: current_user.id, monthly_approval_status: "monthly_approval_pending").minimum(:worked_on))
+                                              .count || 0
     @overtime_requests = Attendance.where(overtime_approver_id: current_user.id, overtime_status: "overtime_pending")
+    @unapproved_overtime_requests = Attendance.where(overtime_approver_id: @user.id, overtime_status: Attendance.overtime_statuses[:overtime_pending]).count || 0
 
     @superiors = User.where(superior: true).where.not(id: current_user.id)
+
+    @monthly_approval_status = if @attendances.any? { |attendance| attendance.monthly_approval_status == "monthly_approval_pending" }
+                            "申請中"
+                          elsif @attendances.all? { |attendance| attendance.monthly_approval_status == "monthly_approval_no_request" }
+                            "未"
+                          elsif @attendances.any? { |attendance| attendance.monthly_approval_status == "monthly_approval_approved" }
+                            "承認済み"
+                          elsif @attendances.any? { |attendance| attendance.monthly_approval_status == "monthly_approval_declined" }
+                            "否認"
+                          else
+                            "その他のステータス"
+                          end
+                          
+    approver_ids = @attendances.map(&:monthly_approval_approver_id).compact.uniq
+    @monthly_approval_approvers = User.where(id: approver_ids)
+
+    @grouped_monthly_approval_requests = @monthly_approval_requests.group_by(&:user)
   end
 
   def new

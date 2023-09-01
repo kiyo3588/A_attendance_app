@@ -21,6 +21,12 @@
   text-align: center;
 }
 
+.full-size-btn {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
 /* 入力フォーム */
 .label-signup {
   margin-top: 5px;
