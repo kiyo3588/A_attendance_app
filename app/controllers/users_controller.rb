@@ -24,9 +24,11 @@ class UsersController < ApplicationController
                                                   monthly_approval_status: "monthly_approval_pending")
                                               .group_by { |m| [m.user_id, m.worked_on.beginning_of_month] }
                                               .map { |key, values| values.find { |v| v.worked_on == key[1] } }
-    @unapproved_monthly_requests = Attendance.where(monthly_approval_approver_id: current_user.id, monthly_approval_status: "monthly_approval_pending")
-                                              .where(worked_on: Attendance.where(monthly_approval_approver_id: current_user.id, monthly_approval_status: "monthly_approval_pending").minimum(:worked_on))
-                                              .count || 0
+    
+    @unapproved_monthly_requests = @monthly_approval_requests.group_by { |request| request.user }.transform_values do |requests|
+      requests.count
+    end
+
     @overtime_requests = Attendance.where(overtime_approver_id: current_user.id, overtime_status: "overtime_pending")
     @unapproved_overtime_requests = Attendance.where(overtime_approver_id: @user.id, overtime_status: Attendance.overtime_statuses[:overtime_pending]).count || 0
 
