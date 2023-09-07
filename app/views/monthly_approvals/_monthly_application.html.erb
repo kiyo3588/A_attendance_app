@@ -1,13 +1,11 @@
 <div class="modal fade" id="monthlyApprovalCheckModal" tabindex="-1" role="dialog" aria-labelledby="monthlyApprovalCheckModal" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <% if @grouped_monthly_approval_requests.present? %>
-        <% @grouped_monthly_approval_requests.each do |user, requests| %>
-          <div class="modal-header">
-            <h4 class="modal-title">【<%= user.name %>からの1カ月分勤怠申請】</h4>
-          </div>
-          <div class="modal-body">
-            <table class="table table-bordered">
+    <%= form_for :monthly_approval_request, url: monthly_approval_path, method: :patch do |f| %>
+      <% @grouped_monthly_approval_requests.each do |user, requests| %>
+          <h4 class="modal-title text-center">【<%= user.name %>からの1カ月分勤怠申請】</h4>
+        <div class="table-responsive">
+            <table class="table table-condensed table-hover">
               <thead>
                 <tr>
                   <th>月</th>
@@ -17,42 +15,29 @@
                 </tr>
               </thead>
               <tbody>
-                <% if requests.present? %>
                   <% requests.each do |request| %>
                     <tr>
-                      <td><%= request.worked_on.strftime("%m月") %></td>
+                      <td><%= request.worked_on.strftime("%-m月") %></td>
                       <td>
-                        <select name="monthly_approval_status">
-                          <option value="no_request" <%= 'selected' if request.monthly_approval_status == 'no_request' %>>なし</option>
-                          <option value="pending" <%= 'selected' if request.monthly_approval_status == 'pending' %>>申請中</option>
-                          <option value="approved" <%= 'selected' if request.monthly_approval_status == 'approved' %>>承認</option>
-                          <option value="declined" <%= 'selected' if request.monthly_approval_status == 'declined' %>>否認</option>
-                        </select>
+                        <%= f.select "monthly_approval_request[#{request.id}][monthly_approval_status]",
+                                  [["なし", "monthly_approval_no_request"], ["申請中", "monthly_approval_pending"], ["承認", "monthly_approval_approved"], ["否認", "monthly_approval_declined"]],
+                                  selected: request.monthly_approval_status,
+                                  class: "form-control" %>
                       </td>
-                      <td><input type="checkbox" name="change_approval_<%= request.id %>"></td>
+                      <td><%= f.check_box "monthly_approval_request[#{request.id}][change_approval]", {}, 1, 0 %></td>
                       <td>
                         <%= link_to '確認', attendance_review_user_path(request.user, date: request.worked_on), class: 'btn btn-primary' %>
                       </td>
                     </tr>
                   <% end %>
-                <% else %>
-                  <tr>
-                    <td colspan="4">申請データはありません。</td>
-                  </tr>
-                <% end %>
               </tbody>
-            </table>
-          </div>
-        <% end %>
-      <% else %>
-        <div class="modal-body">
-          申請データはありません。
+            </table>         
         </div>
       <% end %>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
-        <button type="submit" class="btn btn-primary">更新する</button>
+      <div class="text-center"> 
+        <%= f.submit '変更を送信する', class: 'btn btn-primary btn-lg' %> 
       </div>
+    <% end %>
     </div>
   </div>
 </div>
