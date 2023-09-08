@@ -26,6 +26,7 @@
                       </td>
                       <td><%= f.check_box "monthly_approval_request[#{request.id}][change_approval]", {}, 1, 0 %></td>
                       <td>
+                        <%= hidden_field_tag "attendance_id", request.id %>
                         <%= link_to '確認', attendance_review_user_path(request.user, date: request.worked_on), class: 'btn btn-primary' %>
                       </td>
                     </tr>

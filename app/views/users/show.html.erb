@@ -26,9 +26,9 @@
   <% if current_user.superior? %>
     <div>
       <% if @monthly_approval_requests.present? %>
-        <%= link_to "【所属長承認申請のおしらせ】", "#monthlyApprovalCheckModal", class: "btn #{'notification-link' if @unapproved_monthly_requests.values.sum > 0}", data: { toggle: 'modal' } %>
-        <% if @unapproved_monthly_requests.values.sum > 0 %>
-          <span class="notification-count"><%= @unapproved_monthly_requests.values.sum %>件の通知があります</span>
+        <%= link_to "【所属長承認申請のおしらせ】", "#monthlyApprovalCheckModal", class: "btn #{'notification-link' if @monthly_request_counts.values.sum > 0}", data: { toggle: 'modal' } %>
+        <% if @monthly_request_counts.values.sum > 0 %>
+          <span class="notification-count"><%= @monthly_request_counts.values.sum %>件の通知があります</span>
         <% end %>
       <% else %>
         <%= link_to "【所属長承認申請のおしらせ】", "#", class: "btn" %>

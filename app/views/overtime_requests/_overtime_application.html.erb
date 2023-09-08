@@ -3,7 +3,7 @@
     <div class="modal-content"> 
     <%= form_for :overtime_request, url: approve_overtime_overtime_request_path, method: :patch do |f| %>
       <% @overtime_requests.group_by(&:user).each do |user, requests| %>
-          <h4>【<%= user.name %>からの申請】</h4>
+          <h4 class="text-center">【<%= user.name %>からの申請】</h4>
         <div class="table-responsive">            
             <table class="table table-condensed table-hover">  
               <thead>  

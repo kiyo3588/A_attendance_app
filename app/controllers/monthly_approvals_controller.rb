@@ -17,8 +17,8 @@ class MonthlyApprovalsController < ApplicationController
                                           .group_by { |m| [m.user_id, m.worked_on.beginning_of_month] }
                                           .map { |key, values| values.find { |v| v.worked_on == key[1] } }
 
-    @unapproved_overtime_requests = Attendance.where(overtime_approver_id: @user.id, overtime_status: Attendance.overtime_statuses[:overtime_pending]).count
-    @overtime_requests = Attendance.where(overtime_approver_id: current_user.id, overtime_status: "overtime_pending")
+    # @unapproved_overtime_requests = Attendance.where(overtime_approver_id: @user.id, overtime_status: Attendance.overtime_statuses[:overtime_pending]).count
+    # @overtime_requests = Attendance.where(overtime_approver_id: current_user.id, overtime_status: "overtime_pending")
 
     @superiors = User.where(superior: true).where.not(id: current_user.id)
 
@@ -60,7 +60,7 @@ class MonthlyApprovalsController < ApplicationController
   end
 
   def update
-    @attendance = Attendance.find(params[:attendance_id])
+    @attendance = Attendance.find(params[:id])
     @attendance.monthly_approval_status = params[:monthly_approval_status]  # 承認/非承認のステータスに変更
   
     if @attendance.save
@@ -76,3 +76,9 @@ class MonthlyApprovalsController < ApplicationController
     @attendance = Attendance.find_by(user_id: current_user.id, worked_on: Date.today)
   end
 end
+
+private
+
+  def attendance_params
+    params.require(:attendance).permit(:monthly_approval_status)
+  end

@@ -25,7 +25,7 @@ class UsersController < ApplicationController
                                               .group_by { |m| [m.user_id, m.worked_on.beginning_of_month] }
                                               .map { |key, values| values.find { |v| v.worked_on == key[1] } }
     
-    @unapproved_monthly_requests = @monthly_approval_requests.group_by { |request| request.user }.transform_values do |requests|
+    @monthly_request_counts = @monthly_approval_requests.group_by { |request| request.user }.transform_values do |requests|
       requests.count
     end
 
