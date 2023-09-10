@@ -7,6 +7,7 @@ class Attendance < ApplicationRecord
   belongs_to :attendance_approver, class_name: "User", optional: true, foreign_key: "attendance_approver_id"
 
   validates :worked_on, presence: true
+
   validates :note, length: { maximum: 50 }
 
   validates :overtime_task, length: { maximum: 100 }
@@ -56,4 +57,5 @@ scope :first_day_of_month, -> { where("strftime('%d', worked_on) = '01'") }
       errors.add(:overtime_end_at, "は出勤時間よりも後である必要があります")
     end
   end
+
 end
