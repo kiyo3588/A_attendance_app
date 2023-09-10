@@ -24,6 +24,7 @@ class UsersController < ApplicationController
                                                   monthly_approval_status: "monthly_approval_pending")
                                               .group_by { |m| [m.user_id, m.worked_on.beginning_of_month] }
                                               .map { |key, values| values.find { |v| v.worked_on == key[1] } }
+    @monthly_approval_requests.compact!  # nil の要素を取り除く
     
     @monthly_request_counts = @monthly_approval_requests.group_by { |request| request.user }.transform_values do |requests|
       requests.count
@@ -34,13 +35,13 @@ class UsersController < ApplicationController
 
     @superiors = User.where(superior: true).where.not(id: current_user.id)
 
-    @monthly_approval_status = if @attendances.any? { |attendance| attendance.monthly_approval_status == "monthly_approval_pending" }
+    @monthly_approval_status = if @monthly_approval_requests.any? { |request| request.monthly_approval_status == "monthly_approval_pending" }
                             "申請中"
-                          elsif @attendances.all? { |attendance| attendance.monthly_approval_status == "monthly_approval_no_request" }
+                          elsif @monthly_approval_requests.all? { |request| request.monthly_approval_status == "monthly_approval_no_request" }
                             "未"
-                          elsif @attendances.any? { |attendance| attendance.monthly_approval_status == "monthly_approval_approved" }
+                          elsif @monthly_approval_requests.any? { |request| request.monthly_approval_status == "monthly_approval_approved" }
                             "承認済み"
-                          elsif @attendances.any? { |attendance| attendance.monthly_approval_status == "monthly_approval_declined" }
+                          elsif @monthly_approval_requests.any? { |request| request.monthly_approval_status == "monthly_approval_declined" }
                             "否認"
                           else
                             "その他のステータス"

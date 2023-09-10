@@ -15,22 +15,24 @@
                 </tr>
               </thead>
               <tbody>
-                  <% requests.each do |request| %>
+                  <% requests.each do |monthly_request| %>
+                  <%= fields_for "monthly_requests[#{monthly_request.id}]", monthly_request do |or_fields| %>
                     <tr>
-                      <td><%= request.worked_on.strftime("%-m月") %></td>
+                      <td><%= monthly_request.worked_on.strftime("%-m月") %></td>
                       <td>
-                        <%= f.select "monthly_approval_request[#{request.id}][monthly_approval_status]",
-                                  [["なし", "monthly_approval_no_request"], ["申請中", "monthly_approval_pending"], ["承認", "monthly_approval_approved"], ["否認", "monthly_approval_declined"]],
-                                  selected: request.monthly_approval_status,
-                                  class: "form-control" %>
+                        <%= or_fields.select :monthly_approval_status, {'なし' => 'monthlyapproval_no_request',
+                                                                        '申請中' => 'monthly_approval_pending',
+                                                                        '承認' => 'monthly_approval_approved',
+                                                                        '否認' => 'monthly_approval_declined'
+                                                                        }, {}, { class: 'form-control' } %>
                       </td>
-                      <td><%= f.check_box "monthly_approval_request[#{request.id}][change_approval]", {}, 1, 0 %></td>
+                      <td><%= or_fields.check_box :overtime_check %></td>
                       <td>
-                        <%= hidden_field_tag "attendance_id", request.id %>
-                        <%= link_to '確認', attendance_review_user_path(request.user, date: request.worked_on), class: 'btn btn-primary' %>
+                        <%= link_to '確認', attendance_review_user_path(monthly_request.user, date: monthly_request.worked_on), class: 'btn btn-primary' %>
                       </td>
                     </tr>
                   <% end %>
+                <% end %>
               </tbody>
             </table>         
         </div>

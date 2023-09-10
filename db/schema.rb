@@ -34,11 +34,13 @@ ActiveRecord::Schema.define(version: 20230827122903) do
   end
 
   create_table "bases", force: :cascade do |t|
-    t.integer "base_number"
-    t.string "base_name"
-    t.string "base_type"
+    t.integer "base_number", null: false
+    t.string "base_name", null: false
+    t.string "base_type", default: "0", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["base_name"], name: "index_bases_on_base_name", unique: true
+    t.index ["base_number"], name: "index_bases_on_base_number", unique: true
   end
 
   create_table "users", force: :cascade do |t|
@@ -50,13 +52,13 @@ ActiveRecord::Schema.define(version: 20230827122903) do
     t.string "remember_digest"
     t.boolean "admin", default: false
     t.string "affiliation"
-    t.datetime "basic_work_time", default: "2023-07-30 23:00:00"
-    t.datetime "work_time", default: "2023-07-30 22:30:00"
+    t.datetime "basic_work_time", default: "2023-09-10 08:00:00"
+    t.datetime "work_time", default: "2023-09-10 07:30:00"
     t.boolean "superior", default: false
     t.string "employee_number"
     t.string "uid"
-    t.datetime "designated_work_start_time", default: "2023-07-31 00:00:00"
-    t.datetime "designated_work_end_time", default: "2023-07-31 09:00:00"
+    t.datetime "designated_work_start_time", default: "2023-09-10 09:00:00"
+    t.datetime "designated_work_end_time", default: "2023-09-10 18:00:00"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

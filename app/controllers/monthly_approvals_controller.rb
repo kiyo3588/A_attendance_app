@@ -22,14 +22,13 @@ class MonthlyApprovalsController < ApplicationController
 
     @superiors = User.where(superior: true).where.not(id: current_user.id)
 
-    @monthly_approval_status = if @attendances.any? { |attendance| attendance.monthly_approval_status == "monthly_approval_pending" }
+    @monthly_approval_status = if @attendances.first&.monthly_approval_status.nil? || @attendances.first.monthly_approval_status == "monthly_approval_no_request"                   
+                              "未"
+                          elsif @attendances.first.monthly_approval_status == "monthly_approval_pending"
                             "申請中"
-                          elsif @attendances.all? { |attendance| attendance.monthly_approval_status == "monthly_approval_no_request" }
-                            "未"
-                          elsif @attendances.any? { |attendance| attendance.monthly_approval_status == "monthly_approval_approved" }
+                          elsif  @attendances.first.monthly_approval_status == "monthly_approval_approved"
                             "承認済み"
-                          elsif @attendances.any? { |attendance| attendance.monthly_approval_status == "monthly_approval_declined" }
-                            "否認"
+                          elsif @attendances.first.monthly_approval_status == "monthly_approval_declined"
                           else
                             "その他のステータス"
                           end
@@ -48,9 +47,8 @@ class MonthlyApprovalsController < ApplicationController
 
     first_day = Date.parse(params[:first_day])
     monthly_attendance = current_user.attendances.find_or_initialize_by(worked_on: first_day)    # 月の初日のデータを取得または新規作成
-    attendances_in_month = current_user.attendances.where(worked_on: first_day..first_day.end_of_month)   # 一ヶ月分の勤怠データを更新
 
-    if attendances_in_month.update_all(monthly_approval_status: "monthly_approval_pending", monthly_approval_approver_id: params[:superior_user_id])
+    if monthly_attendance.update(monthly_approval_status: "monthly_approval_pending", monthly_approval_approver_id: params[:superior_user_id])
       flash[:success] = "月次勤怠申請をしました。"
       redirect_to user_path(current_user)
     else
