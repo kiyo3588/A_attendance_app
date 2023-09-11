@@ -46,11 +46,13 @@ class OvertimeRequestsController < ApplicationController
 
       if overtime_request_params["overtime_check"] == "1"
         attendance.update(overtime_status: overtime_request_params["overtime_status"])
+        
+        flash[:success] = "残業申請の変更を行いました。"
+        redirect_to user_path(current_user)
+      else
+        redirect_to user_path(current_user)
       end
     end
-
-    flash[:success] = "変更を保存しました"
-    redirect_to user_path(current_user)
   end
 
   private

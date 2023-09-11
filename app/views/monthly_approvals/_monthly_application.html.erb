@@ -20,7 +20,7 @@
                     <tr>
                       <td><%= monthly_request.worked_on.strftime("%-m月") %></td>
                       <td>
-                        <%= or_fields.select :monthly_approval_status, {'なし' => 'monthlyapproval_no_request',
+                        <%= or_fields.select :monthly_approval_status, {'なし' => 'monthly_approval_no_request',
                                                                         '申請中' => 'monthly_approval_pending',
                                                                         '承認' => 'monthly_approval_approved',
                                                                         '否認' => 'monthly_approval_declined'

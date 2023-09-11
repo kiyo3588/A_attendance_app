@@ -58,15 +58,17 @@ class MonthlyApprovalsController < ApplicationController
   end
 
   def update
-    @attendance = Attendance.find(params[:id])
-    @attendance.monthly_approval_status = params[:monthly_approval_status]  # 承認/非承認のステータスに変更
-  
-    if @attendance.save
-      flash[:success] = "月次勤怠申請の承認状態を更新しました。"
-      redirect_to user_path(current_user)
-    else
-      flash[:danger] = "月次勤怠申請の更新に失敗しました。"
-      render 'users/show'
+    params[:monthly_requests].each do |id, monthly_request_params|
+      attendance = Attendance.find(id)
+
+      if monthly_request_params["overtime_check"] == "1"
+        attendance.update(monthly_approval_status: monthly_request_params["monthly_approval_status"])
+        
+        flash[:success] = "所属長承認申請の変更を行いました。"
+        redirect_to user_path(current_user)
+      else
+        redirect_to user_path(current_user)
+      end
     end
   end
 
@@ -78,5 +80,5 @@ end
 private
 
   def attendance_params
-    params.require(:attendance).permit(:monthly_approval_status)
+    params.require(:attendance).permit(:monthly_approval_status, :overtime_check)
   end
