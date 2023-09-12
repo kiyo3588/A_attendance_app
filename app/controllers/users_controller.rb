@@ -149,6 +149,31 @@ class UsersController < ApplicationController
     
     @last_day = @first_day.end_of_month
     @attendances = @user.attendances.where(worked_on: @first_day..@first_day.end_of_month).order(:worked_on)
+
+    approver_ids = @attendances.map(&:monthly_approval_approver_id).compact.uniq
+    @monthly_approval_approvers = User.where(id: approver_ids)
+
+    @monthly_approval_status = if @user
+      monthly_approval = @user.attendances.find_by(worked_on: @first_day.beginning_of_month)
+      if monthly_approval
+        case monthly_approval.monthly_approval_status
+        when "monthly_approval_pending"
+          "申請中"
+        when "monthly_approval_no_request"
+          "未"
+        when "monthly_approval_approved"
+          "承認済み"
+        when "monthly_approval_declined"
+          "否認"
+        else
+          "その他のステータス"
+        end
+      else
+        "データなし"  # 初日の月次承認データが存在しない場合のデフォルト値
+      end
+    else
+      "ユーザーが存在しません"  # ユーザーが存在しない場合のデフォルト値
+    end
   end
 
   private

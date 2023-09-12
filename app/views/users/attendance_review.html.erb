@@ -107,7 +107,31 @@
             
         <% end %>
       </tbody>
-      
+      <tfoot>
+        <tr>
+          <td colspan="15"></td>
+          <td rowspan="2">
+          <div class="mb-2">
+            所属長承認：
+            <% if @monthly_approval_status == "未" %>
+              <span>未</span>
+            <% elsif @monthly_approval_status == "申請中" %>
+              <span><%= @monthly_approval_approvers.map(&:name).join(", ") %>へ 申請中</span>
+            <% elsif @monthly_approval_status == "承認済み" %>
+              <span><%= @monthly_approval_approvers.map(&:name).join(", ") %>から 承認済み</span>
+            <% elsif @monthly_approval_status == "否認" %>
+              <span><%= @monthly_approval_approvers.map(&:name).join(", ") %>から 否認</span>
+            <% else %>
+              <span class="badge badge-secondary"><%= @monthly_approval_status %></span>
+            <% end %>
+          </div>
+            <div>
+            
+            </div>     
+      </td>
+          </td>
+        </tr>
+      </tfoot>
     </table>
   </div>
   <div>
