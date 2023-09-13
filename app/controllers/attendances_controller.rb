@@ -3,6 +3,7 @@ class AttendancesController < ApplicationController
   before_action :logged_in_user, only: [:update, :edit_one_month]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
   before_action :set_one_month, only: :edit_one_month
+  before_action :set_superiors, only: [:edit_one_month]
 
   UPDATE_ERROR_MSG = "勤怠登録に失敗しました。やり直してください。"
 
@@ -106,5 +107,9 @@ end
       hour, minute = time_string.split(":").map(&:to_i)
       puts "Extracted time: #{[hour, minute]}"
       return hour, minute
+    end
+
+    def set_superiors
+      @superiors = User.where(superior: true).where.not(id: current_user.id)
     end
 end
