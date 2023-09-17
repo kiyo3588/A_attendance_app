@@ -33,35 +33,55 @@ class AttendancesController < ApplicationController
   def update_one_month
     errors = []
     
-    ActiveRecord::Base.transaction do
-      attendances_params.each do |id, item|
-        attendance = Attendance.find(id)
+    begin
+      ActiveRecord::Base.transaction do
+        attendances_params.each do |id, item|
+          @attendance = Attendance.find(id)
+          # next if item[:attendance_approver_id].blank?
 
-        started_hour, started_min = extract_time_from(item[:started_at])        
-        finished_hour, finished_min = extract_time_from(item[:finished_at])
+          worked_on_datetime = @attendance.worked_on.in_time_zone('Asia/Tokyo').to_datetime
+      
+          started_hour, started_min = extract_time_from(item[:started_at])
+          finished_hour, finished_min = extract_time_from(item[:finished_at])
 
-        if started_hour.nil?
-          item[:started_at] = nil
-        else
-          item[:started_at] = attendance.worked_on.to_time.change(hour: started_hour, min: started_min)
+          if started_hour.nil?
+            item[:started_at] = nil
+          else
+            item[:started_at] = worked_on_datetime.change(hour: started_hour, min: started_min)
+          end
+
+          if finished_hour.nil?
+            item[:finished_at] = nil
+          else
+            item[:finished_at] = worked_on_datetime.change(hour: finished_hour, min: finished_min)
+          end
+
+          if item[:next_day].to_i == 1
+            @attendance.next_day = true
+            worked_on_datetime = worked_on_datetime.advance(days: 1)
+          else
+            @attendance.next_day = false
+          end
+
+          if item[:started_at].present? && item[:finished_at].blank?
+            errors << "#{attendance.worked_on}の退社時間が未入力です。"
+          elsif item[:started_at].blank? && item[:finished_at].present?
+            errors << "#{attendance.worked_on}の出社時間が未入力です。"
+          else
+            @attendance.started_at = item[:started_at]
+            @attendance.finished_at = item[:finished_at]
+            @attendance.note = item[:note]
+            @attendance.attendance_approver_id = item[:attendance_approver_id]
+            @attendance.attendance_pending!
+            @attendance.save!
+            end
+          end
         end
 
-        if finished_hour.nil?
-          item[:finished_at] = nil
-        else
-          item[:finished_at] = attendance.worked_on.to_time.change(hour: finished_hour, min: finished_min)
-        end
-
-        if item[:started_at].present? && item[:finished_at].blank?
-          errors << "#{attendance.worked_on}の退社時間が未入力です。"
-        elsif item[:started_at].blank? && item[:finished_at].present?
-          errors << "#{attendance.worked_on}の出社時間が未入力です。"
-        else
-          attendance.started_at = item[:started_at]
-          attendance.finished_at = item[:finished_at]
-          attendance.save!
-        end
-      end
+    rescue => e
+      flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
+      flash[:danger] << "エラー: #{e.message}"
+      redirect_to attendances_edit_one_month_user_url(date: params[:date])
     end
   
     if errors.empty?
@@ -69,12 +89,6 @@ class AttendancesController < ApplicationController
       redirect_to user_url(date: params[:date])
     else
       flash[:danger] = errors.join("<br>").html_safe
-      redirect_to attendances_edit_one_month_user_url(date: params[:date])
-    end
-    rescue => e
-      flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
-      flash[:danger] = "エラー: #{e.message}"
-      redirect_to attendances_edit_one_month_user_url(date: params[:date])
     end
   end
 
@@ -84,7 +98,7 @@ class AttendancesController < ApplicationController
     hour, minute = time_string.split(":").map(&:to_i)
     puts "Extracted time: #{[hour, minute]}"
     return hour, minute
-end
+  end
 
   private
     # 1ヶ月分の勤怠情報を扱います。
@@ -92,6 +106,9 @@ end
       params.require(:user).permit(attendances: [:started_at, :finished_at, :note])[:attendances]
     end
 
+    def update_one_month_params
+      params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :attendance_status, :nect_day, :attendance_approver_id])[:attendances]
+    end
     # beforeフィルター
 
     # 管理権限者、または現在ログインしているユーザーを許可します。
@@ -100,6 +117,7 @@ end
       unless current_user?(@user) || current_user.admin?
         flash[:danger] = "編集権限がありません。"
         redirect_to(root_url)
+      end
     end
 
     def extract_time_from(time_string)

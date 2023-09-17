@@ -108,7 +108,13 @@
               <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary btn-attendance" %>
             <% end %>
           </td>
-          <td><%= l(day.finished_at, format: :hour) if day.finished_at.present? %></td>
+          <td>
+            <% if day.next_day %>
+              <%= l(day.finished_at.tomorrow, format: :hour) if day.finished_at.present? %>
+            <% else %>
+              <%= l(day.finished_at, format: :hour) if day.finished_at.present? %>
+            <% end %>
+          </td>
           <td><%= l(day.finished_at, format: :minute) if day.finished_at.present? %></td>
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>
