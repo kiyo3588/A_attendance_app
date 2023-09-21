@@ -59,6 +59,10 @@ class AttendancesController < ApplicationController
           if item[:next_day].to_i == 1
             @attendance.next_day = true
             worked_on_datetime = worked_on_datetime.advance(days: 1)
+
+            if item[:finished_at].present?
+              item[:finished_at] = worked_on_datetime.change(hour: finished_hour, min: finished_min)
+            end
           else
             @attendance.next_day = false
           end
@@ -81,7 +85,6 @@ class AttendancesController < ApplicationController
     rescue => e
       flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
       flash[:danger] << "エラー: #{e.message}"
-      redirect_to attendances_edit_one_month_user_url(date: params[:date])
     end
   
     if errors.empty?
@@ -89,6 +92,7 @@ class AttendancesController < ApplicationController
       redirect_to user_url(date: params[:date])
     else
       flash[:danger] = errors.join("<br>").html_safe
+      redirect_to attendances_edit_one_month_user_url(date: params[:date])
     end
   end
 
@@ -103,11 +107,11 @@ class AttendancesController < ApplicationController
   private
     # 1ヶ月分の勤怠情報を扱います。
     def attendances_params
-      params.require(:user).permit(attendances: [:started_at, :finished_at, :note])[:attendances]
+      params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :next_day, :attendance_approver_id])[:attendances]
     end
 
     def update_one_month_params
-      params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :attendance_status, :nect_day, :attendance_approver_id])[:attendances]
+      params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :attendance_status, :next_day, :attendance_approver_id])[:attendances]
     end
     # beforeフィルター
 
