@@ -171,11 +171,15 @@
               else ""
               end %>
 
-            <% if day.overtime_status.present? %>
-              <%= "【#{day.overtime_approver.name if day.overtime_approver.present?}】#{overtime_status_text}" %>
+            <% if day.overtime_status == "overtime_no_request" %>
+              <%= "" %>
+            <% elsif day.overtime_status.present? %>
+              <%= "【#{day.overtime_approver.name if day.overtime_approver.present?}】#{overtime_status_text}" %>             
             <% end %><br>
 
-            <% if day.attendance_status.present? %>
+            <% if day.attendance_status == "attendance_no_request" %>
+              <% "" %>
+            <% elsif day.attendance_status.present? %>
               <%= "【#{day.attendance_approver.name if day.attendance_approver.present?}】 #{attendance_status_text}" %>
             <% end %>
         </td>

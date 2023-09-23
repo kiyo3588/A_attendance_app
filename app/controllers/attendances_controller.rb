@@ -75,7 +75,13 @@ class AttendancesController < ApplicationController
             @attendance.finished_at = item[:finished_at]
             @attendance.note = item[:note]
             @attendance.attendance_approver_id = item[:attendance_approver_id]
-            @attendance.attendance_pending!
+
+            if @attendance.attendance_approver_id.blank?
+              @attendance.attendance_no_request!
+            else
+              @attendance.attendance_pending!
+            end
+            
             @attendance.save!
             end
           end
