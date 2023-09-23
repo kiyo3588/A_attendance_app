@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20230827122903) do
+ActiveRecord::Schema.define(version: 20230923120507) do
 
   create_table "attendances", force: :cascade do |t|
     t.date "worked_on"
@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 20230827122903) do
     t.integer "overtime_approver_id"
     t.integer "attendance_status", default: 0
     t.boolean "next_day"
-    t.boolean "overtime_check"
+    t.boolean "approval_status"
     t.integer "monthly_approval_status", default: 0
     t.integer "monthly_approval_approver_id"
     t.integer "attendance_approver_id"

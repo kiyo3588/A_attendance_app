@@ -26,7 +26,7 @@
                                                                         '否認' => 'monthly_approval_declined'
                                                                         }, {}, { class: 'form-control' } %>
                       </td>
-                      <td><%= or_fields.check_box :overtime_check %></td>
+                      <td><%= or_fields.check_box :approval_status %></td>
                       <td>
                         <%= link_to '確認', attendance_review_user_path(monthly_request.user, date: monthly_request.worked_on), class: 'btn btn-primary' %>
                       </td>

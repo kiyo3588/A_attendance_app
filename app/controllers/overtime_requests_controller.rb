@@ -44,7 +44,7 @@ class OvertimeRequestsController < ApplicationController
     params[:overtime_requests].each do |id, overtime_request_params|
       attendance = Attendance.find(id)
 
-      if overtime_request_params["overtime_check"] == "1"
+      if overtime_request_params["approval_status"] == "1"
         attendance.update(overtime_status: overtime_request_params["overtime_status"])
         
         flash[:success] = "残業申請の変更を行いました。"
@@ -62,7 +62,7 @@ class OvertimeRequestsController < ApplicationController
   end
 
   def approve_overtime_params
-    params.require(:attendance).permit(:overtime_status, :overtime_check)
+    params.require(:attendance).permit(:overtime_status, :approval_status)
   end
 
   def set_superiors

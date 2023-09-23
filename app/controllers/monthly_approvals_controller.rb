@@ -61,7 +61,7 @@ class MonthlyApprovalsController < ApplicationController
     params[:monthly_requests].each do |id, monthly_request_params|
       attendance = Attendance.find(id)
 
-      if monthly_request_params["overtime_check"] == "1"
+      if monthly_request_params["approval_status"] == "1"
         attendance.update(monthly_approval_status: monthly_request_params["monthly_approval_status"])
         
         flash[:success] = "所属長承認申請の変更を行いました。"
@@ -80,5 +80,5 @@ end
 private
 
   def attendance_params
-    params.require(:attendance).permit(:monthly_approval_status, :overtime_check)
+    params.require(:attendance).permit(:monthly_approval_status, :approval_status)
   end

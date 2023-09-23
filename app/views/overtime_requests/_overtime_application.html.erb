@@ -55,7 +55,7 @@
                                                                 '否認' => 'overtime_declined'
                                                                 }, {}, { class: 'form-control' } %>
                       </td>
-                      <td><%= or_fields.check_box :overtime_check %></td>
+                      <td><%= or_fields.check_box :approval_status %></td>
                       <td><%= link_to '確認', attendance_review_user_path(overtime_request.user, date: overtime_request.worked_on), class: 'btn btn-primary' %>
                   </tr> 
                 <% end %>   
