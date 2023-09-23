@@ -35,7 +35,14 @@
       <% end %>
     </div>
     <div>
-      <%= link_to "【勤怠変更のお知らせ】", "#", class: "btn" %>
+      <% if @attendance_requests.present? %>
+        <%= link_to "【勤怠変更のお知らせ】", "#", class: "btn" %>
+        <% if @attendance_requests_counts > 0 %>
+          <span class="notification-count"><%= @attendance_requests_counts %>件の通知があります</span>
+        <% end %>
+      <% else %>
+        <%= link_to "【勤怠変更のお知らせ】", "#", class: "btn" %>
+      <% end %>
     </div>
     <div>
       <% if @overtime_requests.present? %>
@@ -150,29 +157,27 @@
           </td>
           <td><%= day.overtime_task ? day.overtime_task : '' %></td>
           <td colspan="2">
-          <% overtime_status_text = case day.overtime_status
-            when "overtime_pending" then "残業申請中"
-            when "overtime_approved" then "残業申請承認済"
-            when "overtime_declined" then "残業申請否認"
-            else ""
-            end %>
-            
-          <% attendance_status_text = case day.attendance_status
-            when "attendance_pending" then "勤怠編集申請中"
-            when "attendance_approved" then "勤怠編集承認済"
-            when "attendance_declined" then "勤怠編集否認"
-            else ""
-            end %>
+            <% overtime_status_text = case day.overtime_status
+              when "overtime_pending" then "残業申請中"
+              when "overtime_approved" then "残業申請承認済"
+              when "overtime_declined" then "残業申請否認"
+              else ""
+              end %>
+              
+            <% attendance_status_text = case day.attendance_status
+              when "attendance_pending" then "勤怠編集申請中"
+              when "attendance_approved" then "勤怠編集承認済"
+              when "attendance_declined" then "勤怠編集否認"
+              else ""
+              end %>
 
-          <% if day.overtime_status == "overtime_pending" %>
-            <%= "#{day.overtime_approver.name if day.overtime_approver.present?}：" %>
-          <% end %>
+            <% if day.overtime_status.present? %>
+              <%= "【#{day.overtime_approver.name if day.overtime_approver.present?}】#{overtime_status_text}" %>
+            <% end %><br>
 
-          <% if day.attendance_status == "attendance_pending" %>
-            <%= "#{day.attendance_approver.name if day.attendance_approver.present?}：" %>
-          <% end %>
-
-          <%= [overtime_status_text, attendance_status_text].reject(&:empty?).join("：") %>
+            <% if day.attendance_status.present? %>
+              <%= "【#{day.attendance_approver.name if day.attendance_approver.present?}】 #{attendance_status_text}" %>
+            <% end %>
         </td>
       </tr>
       <% end %>

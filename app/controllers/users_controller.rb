@@ -30,6 +30,9 @@ class UsersController < ApplicationController
       requests.count
     end
 
+    @attendance_requests = Attendance.where(attendance_approver_id: current_user.id, attendance_status: "attendance_pending")
+    @attendance_requests_counts = @attendance_requests.count
+
     @overtime_requests = Attendance.where(overtime_approver_id: current_user.id, overtime_status: "overtime_pending")
     @unapproved_overtime_requests = Attendance.where(overtime_approver_id: @user.id, overtime_status: Attendance.overtime_statuses[:overtime_pending]).count || 0
 

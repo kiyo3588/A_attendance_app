@@ -3,7 +3,7 @@ class AttendancesController < ApplicationController
   before_action :logged_in_user, only: [:update, :edit_one_month]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
   before_action :set_one_month, only: :edit_one_month
-  before_action :set_superiors, only: [:edit_one_month]
+  before_action :set_superiors, only: [:edit_one_month, :update_one_month]
 
   UPDATE_ERROR_MSG = "勤怠登録に失敗しました。やり直してください。"
 
@@ -38,7 +38,6 @@ class AttendancesController < ApplicationController
         attendances_params.each do |id, item|
           @attendance = Attendance.find(id)
           # next if item[:attendance_approver_id].blank?
-
           worked_on_datetime = @attendance.worked_on.in_time_zone('Asia/Tokyo').to_datetime
       
           started_hour, started_min = extract_time_from(item[:started_at])
