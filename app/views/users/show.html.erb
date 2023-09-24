@@ -36,7 +36,7 @@
     </div>
     <div>
       <% if @attendance_requests.present? %>
-        <%= link_to "【勤怠変更のお知らせ】", "#", class: "btn" %>
+        <%= link_to "【勤怠変更のお知らせ】", "#attendanceCheckModal", class: "btn #{'notification-link' if @attendance_requests_counts > 0}", data: { toggle: 'modal' } %>
         <% if @attendance_requests_counts > 0 %>
           <span class="notification-count"><%= @attendance_requests_counts %>件の通知があります</span>
         <% end %>
@@ -235,6 +235,7 @@
 
   <% @attendances.each do |day| %>
     <%= render partial: "overtime_requests/new_overtime_requests", locals: { day: day } %>
+    <%= render partial: "attendances/attendance_requests_application", locals: { day: day } %>
   <% end %>    
 
   <%= render partial: "monthly_approvals/monthly_application" %>
