@@ -1,7 +1,59 @@
 <div class="modal fade" id="attendanceCheckModal" tabindex="-1" role="dialog" aria-labelledby="attendanceCheckModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-    <h4>モーダル</h4>
+      <% @attendance_requests.each do |attendance_request| %> 
+        <%= form_for attendance_request, url: update_attendance_request_attendance_path(user_id: attendance_request.user, id: attendance_request), method: :patch do |f| %>
+            <h4 class="text-center">【<%= attendance_request.user.name %>からの勤怠変更申請】</h4>
+            <div class="table-responsive">
+              <table class="table table-condensed table-hover">
+                <thead>
+                  <tr>
+                    <th rowspan="3">日付</th>
+                    <th rowspan="3">曜日</th>
+                    <th colspan="4">変更前</th>
+                    <th colspan="4">変更後</th>
+                    <th rowspan="3">備考</th>
+                    <th rowspan="3">指示者確認㊞</th>
+                    <th rowspan="3">変更</th>
+                    <th rowspan="3">勤怠を確認する</th>
+                  </tr>
+                  <tr>
+                    <th colspan="2">出社</th>
+                    <th colspan="2">退社</th>
+                    <th colspan="2">出社</th>
+                    <th colspan="2">退社</th>
+                  </tr>
+                  <tr>
+                    <th>時</th>
+                    <th>分</th>
+                    <th>時</th>
+                    <th>分</th>
+                    <th>時</th>
+                    <th>分</th>
+                    <th>時</th>
+                    <th>分</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><%= l(attendance_request.worked_on, format: :short) %></td>
+                    <td><%= $days_of_the_week[attendance_request.worked_on.wday] %></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        <div class="text-center">
+          <%= f.submit '変更を送信する', class: 'btn btn-primary btn-lg' %>
+        </div>
+        <% end %>   
+      <% end %>
     </div>
   </div>
 </div>

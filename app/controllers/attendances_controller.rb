@@ -109,6 +109,9 @@ class AttendancesController < ApplicationController
     return hour, minute
   end
 
+  def update_attendance_request
+  end
+
   private
     # 1ヶ月分の勤怠情報を扱います。
     def attendances_params

@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+
+  resources :attendances, only: [] do
+    member do
+      patch :update_attendance_request
+    end
+  end
+
   get 'bases/index'
 
   root 'static_pages#top'
@@ -21,7 +28,12 @@ Rails.application.routes.draw do
       patch 'attendances/update_one_month'
       get 'attendance_review'
     end
-    resources :attendances, only: :update
+    
+    resources :attendances, only: :update do
+      member do
+        patch :update_attendance_request
+      end
+    end
   end
 
   resources :bases

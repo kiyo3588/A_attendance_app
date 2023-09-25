@@ -73,8 +73,8 @@
         <th rowspan="3">残業申請</th>
         <th rowspan="3">日付</th>
         <th rowspan="3">曜日</th>
-        <th colspan="8">【実績】</th>
-        <th colspan="5">所定外勤務</th>
+        <th colspan="7">【実績】</th>
+        <th colspan="6">所定外勤務</th>
       </tr>
       <tr>
         <th colspan="2">出社</th>
@@ -235,9 +235,9 @@
 
   <% @attendances.each do |day| %>
     <%= render partial: "overtime_requests/new_overtime_requests", locals: { day: day } %>
-    <%= render partial: "attendances/attendance_requests_application", locals: { day: day } %>
   <% end %>    
 
   <%= render partial: "monthly_approvals/monthly_application" %>
+  <%= render partial: "attendances/attendance_requests_application" %>
   <%= render partial: "overtime_requests/overtime_application" %>
 </div>
