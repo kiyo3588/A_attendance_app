@@ -45,9 +45,15 @@
                         <td></td>
                         <td></td>
                         <td><%= attendance_request.started_at.strftime('%-H') %></td>
-                        <td><%= attendance_request.started_at.strftime('%-M') %></td>
-                        <td><%= attendance_request.finished_at.strftime('%-H') %></td>
-                        <td><%= attendance_request.finished_at.strftime('%-M') %></td>
+                        <td><%= attendance_request.started_at.strftime('%M') %></td>
+                        <td>
+                          <% if attendance_request.next_day %>
+                            (翌日) <%= attendance_request.finished_at.strftime('%-H') %>
+                          <% else %>
+                            <%= attendance_request.finished_at.strftime('%-H') %>
+                          <% end %>
+                        </td>
+                        <td><%= attendance_request.finished_at.strftime('%M') %></td>
                         <td><%= attendance_request.note %></td>
                         <td>
                           <%= or_fields.select :attendance_status, {'なし' => 'attendance_no_request',
