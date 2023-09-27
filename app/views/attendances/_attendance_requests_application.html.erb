@@ -1,9 +1,9 @@
 <div class="modal fade" id="attendanceCheckModal" tabindex="-1" role="dialog" aria-labelledby="attendanceCheckModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <% @attendance_requests.each do |attendance_request| %> 
-        <%= form_for attendance_request, url: update_attendance_request_attendance_path(user_id: attendance_request.user, id: attendance_request), method: :patch do |f| %>
-            <h4 class="text-center">【<%= attendance_request.user.name %>からの勤怠変更申請】</h4>
+      <%= form_for :attendance_request, url: update_attendance_request_attendance_path, method: :patch do |f| %>
+        <% @attendance_requests.group_by(&:user).each do |user, requests| %>
+            <h4 class="text-center">【<%= user.name %>からの勤怠変更申請】</h4>
             <div class="table-responsive">
               <table class="table table-condensed table-hover">
                 <thead>
@@ -35,24 +35,39 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td><%= l(attendance_request.worked_on, format: :short) %></td>
-                    <td><%= $days_of_the_week[attendance_request.worked_on.wday] %></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                  </tr>
+                    <% requests.each do |attendance_request| %>
+                      <%= fields_for "attendance_requests[#{attendance_request.id}]", attendance_request do |or_fields| %>
+                      <tr>
+                        <td><%= l(attendance_request.worked_on, format: :short) %></td>
+                        <td><%= $days_of_the_week[attendance_request.worked_on.wday] %></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><%= attendance_request.started_at.strftime('%-H') %></td>
+                        <td><%= attendance_request.started_at.strftime('%-M') %></td>
+                        <td><%= attendance_request.finished_at.strftime('%-H') %></td>
+                        <td><%= attendance_request.finished_at.strftime('%-M') %></td>
+                        <td><%= attendance_request.note %></td>
+                        <td>
+                          <%= or_fields.select :attendance_status, {'なし' => 'attendance_no_request',
+                                                                    '申請中' => 'attendance_pending',
+                                                                    '承認' => 'attendance_approved',
+                                                                    '否認' => 'attendance_declined'
+                                                                  }, {}, { class: 'form-control' } %>
+                        </td>
+                        <td><%= or_fields.check_box :approval_status %></td>
+                        <td><%= link_to '確認', attendance_review_user_path(attendance_request.user, date: attendance_request.worked_on), class: 'btn btn-primary' %></td>
+                      </tr>
+                    <% end %>
+                  <% end %>
                 </tbody>
               </table>
             </div>
+          <% end %>  
         <div class="text-center">
           <%= f.submit '変更を送信する', class: 'btn btn-primary btn-lg' %>
         </div>
-        <% end %>   
       <% end %>
     </div>
   </div>
