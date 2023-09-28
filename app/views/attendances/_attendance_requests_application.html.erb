@@ -40,10 +40,10 @@
                       <tr>
                         <td><%= l(attendance_request.worked_on, format: :short) %></td>
                         <td><%= $days_of_the_week[attendance_request.worked_on.wday] %></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td><%= attendance_request.started_at_before_change&.strftime('%-H') %></td>
+                        <td><%= attendance_request.started_at_before_change&.strftime('%M') %></td>
+                        <td><%= attendance_request.finished_at_before_change&.strftime('%-H') %></td>
+                        <td><%= attendance_request.finished_at_before_change&.strftime('%M') %></td>
                         <td><%= attendance_request.started_at.strftime('%-H') %></td>
                         <td><%= attendance_request.started_at.strftime('%M') %></td>
                         <td>

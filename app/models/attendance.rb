@@ -1,6 +1,8 @@
 class Attendance < ApplicationRecord
   belongs_to :user
 
+  before_update :store_before_change_time
+
   # approverに関するアソシエーション
   belongs_to :overtime_approver, class_name: "User", optional: true, foreign_key: "overtime_approver_id"
   belongs_to :monthly_approval_approver, class_name: "User", optional: true, foreign_key: "monthly_approval_approver_id"
@@ -58,4 +60,15 @@ scope :first_day_of_month, -> { where("strftime('%d', worked_on) = '01'") }
     end
   end
 
+  private
+
+  def store_before_change_time
+    if started_at_changed?
+      self.started_at_before_change = started_at_was
+    end
+
+    if finished_at_changed?
+      self.finished_at_before_change = finished_at_was
+    end
+  end
 end

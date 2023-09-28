@@ -135,9 +135,9 @@
           <td><%= day.note %></td>
           <td>
           <% if day.next_day %>
-            <%= day.overtime_end_at ? "(翌日)" + day.overtime_end_at.strftime('%H') : '' %>
+            <%= day.overtime_end_at ? "(翌日)" + day.overtime_end_at.strftime('%-H') : '' %>
           <% else %>
-            <%= day.overtime_end_at ? day.overtime_end_at.strftime('%H') : '' %>
+            <%= day.overtime_end_at ? day.overtime_end_at.strftime('%-H') : '' %>
           <% end %>
           </td>
           <td><%= day.overtime_end_at ? day.overtime_end_at.strftime('%M') : '' %></td>
