@@ -110,12 +110,29 @@ class AttendancesController < ApplicationController
   end
 
   def update_attendance_request
+    success = false # フラグを用意して、更新が成功したかどうかを追跡
+
+    params[:attendance_requests].each do |id, attendance_params|
+      attendance = Attendance.find(id)
+
+      if attendance_params["approval_status"] == "1"
+        success = attendance.update(attendance_status: attendance_params["attendance_status"])
+      end
+    end
+
+    if success
+      flash[:success] = '勤怠変更申請を更新しました。'
+    else
+      flash[:warning] = '勤怠変更申請の更新に問題がありました。'
+    end
+
+    redirect_to user_path(current_user)
   end
 
   private
     # 1ヶ月分の勤怠情報を扱います。
     def attendances_params
-      params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :next_day, :attendance_approver_id])[:attendances]
+      params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :next_day, :attendance_approver_id, :attendance_status, :approval_status])[:attendances]
     end
 
     def update_one_month_params

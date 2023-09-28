@@ -36,7 +36,7 @@
                 </thead>
                 <tbody>
                     <% requests.each do |attendance_request| %>
-                      <%= fields_for "attendance_requests[#{attendance_request.id}]", attendance_request do |or_fields| %>
+                      <%= fields_for "attendance_requests[#{attendance_request.id}]", attendance_request do |ar_fields| %>
                       <tr>
                         <td><%= l(attendance_request.worked_on, format: :short) %></td>
                         <td><%= $days_of_the_week[attendance_request.worked_on.wday] %></td>
@@ -56,13 +56,13 @@
                         <td><%= attendance_request.finished_at.strftime('%M') %></td>
                         <td><%= attendance_request.note %></td>
                         <td>
-                          <%= or_fields.select :attendance_status, {'なし' => 'attendance_no_request',
+                          <%= ar_fields.select :attendance_status, {'なし' => 'attendance_no_request',
                                                                     '申請中' => 'attendance_pending',
                                                                     '承認' => 'attendance_approved',
                                                                     '否認' => 'attendance_declined'
                                                                   }, {}, { class: 'form-control' } %>
                         </td>
-                        <td><%= or_fields.check_box :approval_status %></td>
+                        <td><%= ar_fields.check_box :approval_status %></td>
                         <td><%= link_to '確認', attendance_review_user_path(attendance_request.user, date: attendance_request.worked_on), class: 'btn btn-primary' %></td>
                       </tr>
                     <% end %>

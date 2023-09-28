@@ -180,7 +180,7 @@
             <% if day.attendance_status == "attendance_no_request" %>
               <% "" %>
             <% elsif day.attendance_status.present? %>
-              <%= "【#{day.attendance_approver.name if day.attendance_approver.present?}】 #{attendance_status_text}" %>
+              <%= "【#{day.attendance_approver.name if day.attendance_approver.present?}】#{attendance_status_text}" %>
             <% end %>
         </td>
       </tr>

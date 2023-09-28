@@ -38,18 +38,6 @@ class UsersController < ApplicationController
 
     @superiors = User.where(superior: true).where.not(id: current_user.id)
 
-    # @monthly_approval_status = if @monthly_approval_requests.any? { |request| request.monthly_approval_status == "monthly_approval_pending" }
-    #                         "申請中"
-    #                       elsif @monthly_approval_requests.all? { |request| request.monthly_approval_status == "monthly_approval_no_request" }
-    #                         "未"
-    #                       elsif @monthly_approval_requests.any? { |request| request.monthly_approval_status == "monthly_approval_approved" }
-    #                         "承認済み"
-    #                       elsif @monthly_approval_requests.any? { |request| request.monthly_approval_status == "monthly_approval_declined" }
-    #                         "否認"
-    #                       else
-    #                         "その他のステータス"
-    #                       end
-
     @monthly_approval_status = if @user
       monthly_approval = @user.attendances.find_by(worked_on: @first_day.beginning_of_month)
       if monthly_approval
