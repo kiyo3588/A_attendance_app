@@ -175,8 +175,8 @@
               <%= "" %>
             <% elsif day.overtime_status.present? %>
               <%= "【#{day.overtime_approver.name if day.overtime_approver.present?}】#{overtime_status_text}" %>             
-            <% end %><br>
-
+            <% end %>
+            <br>
             <% if day.attendance_status == "attendance_no_request" %>
               <% "" %>
             <% elsif day.attendance_status.present? %>
