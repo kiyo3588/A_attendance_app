@@ -71,4 +71,12 @@
   padding: 2px 5px;
   border-radius: 3px;
 }
+
+.text-blue {
+  color: blue;
+}
+
+.text-red {
+  color: red;
+}
 /*# sourceMappingURL=users.css.map */

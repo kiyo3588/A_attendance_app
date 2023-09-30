@@ -61,7 +61,7 @@
     <%= link_to "CSV出力", "#", class: "btn btn-primary me-2" %> <!-- "#"は仮のパスです -->
   </div>
   <div>
-    <%= link_to "勤怠修正ログ(承認済み)", "#", class: "btn btn-primary" %> <!-- "#"は仮のパスです -->
+    <%= link_to "勤怠修正ログ(承認済み)", "#attendanceChangeModal", class: "btn btn-primary", "data-toggle" => "modal" %>
   </div>
 </div>
 
@@ -105,7 +105,7 @@
             <%= link_to "残業申請", "#overtimeModal-#{day.worked_on}", class: "btn btn-primary overtime-request-btn", "data-toggle" => "modal", data: { date: day.worked_on } %>
           </td>
           <td><%= l(day.worked_on, format: :short) %></td>
-          <td class="<%= day.worked_on.strftime('%a').downcase %>">
+          <td class="<%= day_color_class(day.worked_on.wday) %>">
             <%= $days_of_the_week[day.worked_on.wday] %>
           </td>
           <td><%= l(day.started_at, format: :hour) if day.started_at.present? %></td>
@@ -240,4 +240,6 @@
   <%= render partial: "monthly_approvals/monthly_application" %>
   <%= render partial: "attendances/attendance_requests_application" %>
   <%= render partial: "overtime_requests/overtime_application" %>
+
+  <%= render partial: "attendances/approved_attendance_logs" %>
 </div>
