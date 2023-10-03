@@ -1,0 +1,33 @@
+<% provide(:title, @user.name) %>
+<h1 class="modal-title">勤怠変更履歴</h1>
+<div>
+  <%= form_with(url: approved_logs_user_attendance_path(params[:user_id]), method: :get, local: true) do %>
+    <%= select_year Date.today, prefix: :search, start_year: Date.today.year - 5, end_year: Date.today.year %><br>
+    <%= select_month Date.today, prefix: :search %>
+    <%= submit_tag '検索', class: 'btn btn-primary' %>
+  <% end %>
+  </div>
+<table class="table">
+  <thead>
+    <tr>
+      <th>日付</th>
+      <th>変更前出社時間</th>
+      <th>変更前退社時間</th>
+      <th>変更後出社時間</th>
+      <th>変更後退社時間</th>
+      <th>承認者</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @approved_attendances.each do |attendance| %>
+      <tr>
+        <td><%= attendance.worked_on %></td>
+        <td><%= attendance.started_at_before_change&.strftime("%H:%M") %></td>
+        <td><%= attendance.finished_at_before_change&.strftime("%H:%M") %></td>
+        <td><%= attendance.started_at&.strftime("%H:%M") %></td>
+        <td><%= attendance.finished_at&.strftime("%H:%M") %></td>
+        <td><%= User.find(attendance.attendance_approver_id).name if attendance.attendance_approver_id %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

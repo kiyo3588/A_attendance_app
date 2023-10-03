@@ -32,6 +32,7 @@ Rails.application.routes.draw do
     resources :attendances, only: :update do
       member do
         patch :update_attendance_request
+        get :approved_logs
       end
     end
   end

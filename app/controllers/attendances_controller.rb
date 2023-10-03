@@ -1,6 +1,6 @@
 class AttendancesController < ApplicationController
-  before_action :set_user, only: [:edit_one_month, :update_one_month]
-  before_action :logged_in_user, only: [:update, :edit_one_month]
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :approved_logs]
+  before_action :logged_in_user, only: [:update, :edit_one_month, :approved_logs]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :update_one_month]
   before_action :set_one_month, only: :edit_one_month
   before_action :set_superiors, only: [:edit_one_month, :update_one_month]
@@ -67,9 +67,9 @@ class AttendancesController < ApplicationController
           end
 
           if item[:started_at].present? && item[:finished_at].blank?
-            errors << "#{attendance.worked_on}の退社時間が未入力です。"
+            errors << "#{@attendance.worked_on}の退社時間が未入力です。"
           elsif item[:started_at].blank? && item[:finished_at].present?
-            errors << "#{attendance.worked_on}の出社時間が未入力です。"
+            errors << "#{@attendance.worked_on}の出社時間が未入力です。"
           else
             @attendance.started_at = item[:started_at]
             @attendance.finished_at = item[:finished_at]
@@ -101,14 +101,6 @@ class AttendancesController < ApplicationController
     end
   end
 
-  def extract_time_from(time_string)
-    return [nil, nil] if time_string.blank?
-
-    hour, minute = time_string.split(":").map(&:to_i)
-    puts "Extracted time: #{[hour, minute]}"
-    return hour, minute
-  end
-
   def update_attendance_request
     success = false # フラグを用意して、更新が成功したかどうかを追跡
 
@@ -129,15 +121,25 @@ class AttendancesController < ApplicationController
     redirect_to user_path(current_user)
   end
 
+  def approved_logs
+    if params[:search].present? && params[:search][:year].present? && params[:search][:month].present?
+      start_date = Date.new(params[:search][:year].to_i, params[:search][:month].to_i, 1)
+      end_date = start_date.end_of_month
+      @approved_attendances = Attendance.attendance_approved.where(user_id: params[:user_id], worked_on: start_date..end_date)
+    else
+      @approved_attendances = Attendance.attendance_approved.where(user_id: params[:user_id])
+    end
+  end
+
   private
     # 1ヶ月分の勤怠情報を扱います。
     def attendances_params
       params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :next_day, :attendance_approver_id, :attendance_status, :approval_status])[:attendances]
     end
 
-    def update_one_month_params
-      params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :attendance_status, :next_day, :attendance_approver_id])[:attendances]
-    end
+    # def update_one_month_params
+    #   params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :attendance_status, :next_day, :attendance_approver_id])[:attendances]
+    # end
     # beforeフィルター
 
     # 管理権限者、または現在ログインしているユーザーを許可します。
@@ -150,9 +152,7 @@ class AttendancesController < ApplicationController
     end
 
     def extract_time_from(time_string)
-
       hour, minute = time_string.split(":").map(&:to_i)
-      puts "Extracted time: #{[hour, minute]}"
       return hour, minute
     end
 

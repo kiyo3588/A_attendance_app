@@ -61,7 +61,7 @@
     <%= link_to "CSV出力", "#", class: "btn btn-primary me-2" %> <!-- "#"は仮のパスです -->
   </div>
   <div>
-    <%= link_to "勤怠修正ログ(承認済み)", "#attendanceChangeModal", class: "btn btn-primary", "data-toggle" => "modal" %>
+    <%= link_to "勤怠修正ログ(承認済み)", approved_logs_user_attendance_path(current_user), class: "btn btn-primary" %>
   </div>
 </div>
 
@@ -241,5 +241,4 @@
   <%= render partial: "attendances/attendance_requests_application" %>
   <%= render partial: "overtime_requests/overtime_application" %>
 
-  <%= render partial: "attendances/approved_attendance_logs" %>
 </div>
