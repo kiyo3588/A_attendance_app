@@ -107,7 +107,10 @@ class AttendancesController < ApplicationController
     params[:attendance_requests].each do |id, attendance_params|
       attendance = Attendance.find(id)
 
-      if attendance_params["approval_status"] == "1"
+      if attendance_params["approval_status"] == "1" && attendance_params["attendance_status"] == "attendance_approved"
+        success = attendance.update(attendance_status: attendance_params["attendance_status"],
+                                    display_in_logs: true)
+      elsif attendance_params["approval_status"] == "1"
         success = attendance.update(attendance_status: attendance_params["attendance_status"])
       end
     end
@@ -125,12 +128,22 @@ class AttendancesController < ApplicationController
     if params[:search].present? && params[:search][:year].present? && params[:search][:month].present?
       start_date = Date.new(params[:search][:year].to_i, params[:search][:month].to_i, 1)
       end_date = start_date.end_of_month
-      @approved_attendances = Attendance.attendance_approved.where(user_id: params[:user_id], worked_on: start_date..end_date)
+      @approved_attendances = Attendance.attendance_approved.where(user_id: params[:user_id],
+                                                                   worked_on: start_date..end_date,
+                                                                   display_in_logs: true)
     else
-      @approved_attendances = Attendance.attendance_approved.where(user_id: params[:user_id])
+      @approved_attendances = Attendance.attendance_approved.where(user_id: params[:user_id],
+                                                                    display_in_logs: true)
     end
   end
 
+  def reset_approved_logs
+    @user = User.find(params[:user_id]) # 対象のユーザーを見つける
+    @user.attendances.where(display_in_logs: true).update_all(display_in_logs: false)  # そのユーザーの、表示すべき履歴ログを非表示にする
+    flash[:success] = "履歴ログをリセットしました。"
+    redirect_to approved_logs_user_attendance_path(@user)
+  end
+  
   private
     # 1ヶ月分の勤怠情報を扱います。
     def attendances_params

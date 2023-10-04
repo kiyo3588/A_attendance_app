@@ -33,6 +33,7 @@ Rails.application.routes.draw do
       member do
         patch :update_attendance_request
         get :approved_logs
+        delete :reset_approved_logs
       end
     end
   end

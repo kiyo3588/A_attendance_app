@@ -1,5 +1,8 @@
 <% provide(:title, @user.name) %>
 <h1 class="modal-title">勤怠変更履歴</h1>
+
+<%= link_to "リセット", reset_approved_logs_user_attendance_path(@user), method: :delete, data: {confirm: "本当に履歴をリセットしますか？"}, class: 'btn btn-danger' %>
+
 <div>
   <%= form_with(url: approved_logs_user_attendance_path(params[:user_id]), method: :get, local: true) do %>
     <%= select_year Date.today, prefix: :search, start_year: Date.today.year - 5, end_year: Date.today.year %><br>
