@@ -126,14 +126,19 @@ class AttendancesController < ApplicationController
 
   def approved_logs
     if params[:search].present? && params[:search][:year].present? && params[:search][:month].present?
-      start_date = Date.new(params[:search][:year].to_i, params[:search][:month].to_i, 1)
-      end_date = start_date.end_of_month
-      @approved_attendances = Attendance.attendance_approved.where(user_id: params[:user_id],
+      if valid_year_month?(params[:search][:year], params[:search][:month])
+        start_date = Date.new(params[:search][:year].to_i, params[:search][:month].to_i, 1)
+        end_date = start_date.end_of_month
+        @approved_attendances = Attendance.attendance_approved.where(user_id: params[:user_id],
                                                                    worked_on: start_date..end_date,
                                                                    display_in_logs: true)
+      else
+        @approved_attendances = Attendance.attendance_approved.where(user_id: params[:user_id],
+                                                                    display_in_logs: true)
+      end
     else
       @approved_attendances = Attendance.attendance_approved.where(user_id: params[:user_id],
-                                                                    display_in_logs: true)
+                                                                  display_in_logs: true)
     end
   end
 
@@ -171,5 +176,9 @@ class AttendancesController < ApplicationController
 
     def set_superiors
       @superiors = User.where(superior: true).where.not(id: current_user.id)
+    end
+
+    def valid_year_month?(year, month)
+      (year.to_i.to_s == year) && (month.to_i.to_s == month) && (1..12).include?(month.to_i)
     end
 end
