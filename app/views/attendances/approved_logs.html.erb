@@ -16,10 +16,10 @@
       <tbody>
         <tr>
           <td>
-            <%= select_tag 'search[year]', options_for_select((Date.today.year - 5..Date.today.year).to_a.reverse.unshift('全体表示'), selected: params[:search].try(:[], :year)), include_blank: true %>     
+            <%= select_tag 'search[year]', options_for_select((Date.today.year - 5..Date.today.year).to_a.reverse.unshift('全体表示'), selected: params[:search].try(:[], :year)) %>     
           </td>
           <td>
-            <%= select_tag 'search[month]', options_for_select((1..12).to_a.unshift('全体表示'), selected: params[:search].try(:[], :month)), include_blank: true %>
+            <%= select_tag 'search[month]', options_for_select((1..12).to_a, selected: params[:search].try(:[], :month)) %>
           </td>
           <td><%= submit_tag '検索', class: 'btn btn-primary' %></td>
         </tr>
