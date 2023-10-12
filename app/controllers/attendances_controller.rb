@@ -74,12 +74,10 @@ class AttendancesController < ApplicationController
             
             if @attendance.attendance_approver_id.blank?
 
-            else
-              
+            else           
               # 送信された値（これはフォームから送信されたパラメータを取得する例です。実際の値に置き換えてください）
               new_started_at = item[:started_at]
               new_finished_at = item[:finished_at]
-
               # 編集前の時間と送信された時間が同じであるかどうかをチェック
               if @attendance.started_at == new_started_at && @attendance.finished_at == new_finished_at
               
@@ -90,9 +88,10 @@ class AttendancesController < ApplicationController
                 @attendance.attendance_approver_id = item[:attendance_approver_id]
 
                 @attendance.attendance_pending!
+                @attendance.save!
               end
             
-              @attendance.save!
+             
             end
           end
         end
