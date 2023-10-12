@@ -71,25 +71,25 @@ class AttendancesController < ApplicationController
           elsif item[:started_at].blank? && item[:finished_at].present?
             errors << "#{@attendance.worked_on}の出社時間が未入力です。"
           else
-            @attendance.started_at = item[:started_at]
-            @attendance.finished_at = item[:finished_at]
-            @attendance.note = item[:note]
-            @attendance.attendance_approver_id = item[:attendance_approver_id]
-
+            
             if @attendance.attendance_approver_id.blank?
 
             else
+              
               # 送信された値（これはフォームから送信されたパラメータを取得する例です。実際の値に置き換えてください）
               new_started_at = item[:started_at]
               new_finished_at = item[:finished_at]
 
               # 編集前の時間と送信された時間が同じであるかどうかをチェック
               if @attendance.started_at == new_started_at && @attendance.finished_at == new_finished_at
-
+              
               else
+                @attendance.started_at = item[:started_at]
+                @attendance.finished_at = item[:finished_at]
+                @attendance.note = item[:note]
+                @attendance.attendance_approver_id = item[:attendance_approver_id]
 
-              @attendance.attendance_approver_id = item[:attendance_approver_id]
-              @attendance.attendance_pending!
+                @attendance.attendance_pending!
               end
             
               @attendance.save!

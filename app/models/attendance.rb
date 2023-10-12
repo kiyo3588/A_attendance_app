@@ -65,10 +65,12 @@ scope :first_day_of_month, -> { where("strftime('%d', worked_on) = '01'") }
   def store_before_change_time
     if started_at_changed?
       self.started_at_before_change = started_at_was
+      self.first_started_at_before_change ||= started_at_was
     end
 
     if finished_at_changed?
       self.finished_at_before_change = finished_at_was
+      self.first_finished_at_before_change ||= finished_at_was
     end
   end
 end

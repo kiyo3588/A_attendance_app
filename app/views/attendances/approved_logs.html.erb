@@ -43,8 +43,8 @@
     <% @approved_attendances.each do |attendance| %>
       <tr>
         <td><%= attendance.worked_on %></td>
-        <td><%= attendance.started_at_before_change&.strftime("%H:%M") %></td>
-        <td><%= attendance.finished_at_before_change&.strftime("%H:%M") %></td>
+        <td><%= attendance.first_started_at_before_change&.strftime("%H:%M") %></td>
+        <td><%= attendance.first_finished_at_before_change&.strftime("%H:%M") %></td>
         <td><%= attendance.started_at&.strftime("%H:%M") %></td>
         <td><%= attendance.finished_at&.strftime("%H:%M") %></td>
         <td><%= User.find(attendance.attendance_approver_id).name if attendance.attendance_approver_id %></td>

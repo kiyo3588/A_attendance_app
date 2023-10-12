@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20231003233833) do
+ActiveRecord::Schema.define(version: 20231011234224) do
 
   create_table "attendances", force: :cascade do |t|
     t.date "worked_on"
@@ -33,6 +33,8 @@ ActiveRecord::Schema.define(version: 20231003233833) do
     t.datetime "started_at_before_change"
     t.datetime "finished_at_before_change"
     t.boolean "display_in_logs"
+    t.datetime "first_started_at_before_change"
+    t.datetime "first_finished_at_before_change"
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
