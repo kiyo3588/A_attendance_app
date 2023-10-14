@@ -135,20 +135,15 @@ class AttendancesController < ApplicationController
   end
 
   def approved_logs
-    if params[:search].present? && params[:search][:year].present? && params[:search][:month].present?
-      if valid_year_month?(params[:search][:year], params[:search][:month])
-        start_date = Date.new(params[:search][:year].to_i, params[:search][:month].to_i, 1)
-        end_date = start_date.end_of_month
-        @approved_attendances = Attendance.attendance_approved.where(user_id: params[:user_id],
-                                                                   worked_on: start_date..end_date,
-                                                                   display_in_logs: true)
-      else
-        @approved_attendances = Attendance.attendance_approved.where(user_id: params[:user_id],
-                                                                    display_in_logs: true)
-      end
+    base_query = Attendance.attendance_approved.where(user_id: params[:user_id], display_in_logs: true)
+
+    if params[:search].present? && params[:search][:year].present? && params[:search][:month].present? && valid_year_month?(params[:search][:year], params[:search][:month])
+      start_date = Date.new(params[:search][:year].to_i, params[:search][:month].to_i, 1)
+      end_date = start_date.end_of_month
+       
+      @approved_attendances = base_query.where(worked_on: start_date..end_date)
     else
-      @approved_attendances = Attendance.attendance_approved.where(user_id: params[:user_id],
-                                                                  display_in_logs: true)
+      @approved_attendances = base_query
     end
   end
 

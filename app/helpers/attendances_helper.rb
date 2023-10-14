@@ -15,4 +15,15 @@ module AttendancesHelper
     format("%.2f", (((finish - start) / 60) / 60.0))
   end
 
+  def format_time(time, next_day_check=false)
+    return unless time
+
+    format_string = next_day_check ? "(翌日) %-H:%M" : "%-H:%M"
+    time.strftime(format_string)
+  end
+
+  def same_day?(start_time, end_time)
+    return unless start_time && end_time
+    start_time.to_date == end_time.to_date
+  end
 end
