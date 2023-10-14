@@ -37,6 +37,7 @@ class AttendancesController < ApplicationController
       ActiveRecord::Base.transaction do
         attendances_params.each do |id, item|
           @attendance = Attendance.find(id)
+          @attendance.attendance_approver_id = item[:attendance_approver_id]
           # next if item[:attendance_approver_id].blank?
           worked_on_datetime = @attendance.worked_on.in_time_zone('Asia/Tokyo').to_datetime
       
@@ -73,14 +74,14 @@ class AttendancesController < ApplicationController
           else
             
             if @attendance.attendance_approver_id.blank?
-
+              
             else           
               # 送信された値（これはフォームから送信されたパラメータを取得する例です。実際の値に置き換えてください）
               new_started_at = item[:started_at]
               new_finished_at = item[:finished_at]
               # 編集前の時間と送信された時間が同じであるかどうかをチェック
               if @attendance.started_at == new_started_at && @attendance.finished_at == new_finished_at
-              
+               
               else
                 @attendance.started_at = item[:started_at]
                 @attendance.finished_at = item[:finished_at]
@@ -89,6 +90,7 @@ class AttendancesController < ApplicationController
 
                 @attendance.attendance_pending!
                 @attendance.save!
+            
               end
             
              
