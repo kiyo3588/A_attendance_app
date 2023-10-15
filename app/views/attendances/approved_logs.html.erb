@@ -45,7 +45,7 @@
         <td><%= attendance.worked_on %></td>
         <td><%= format_time(attendance.first_started_at_before_change) %></td>
         <td>
-          <% if same_day?(attendance.first_started_at_before_change, attendance.first_finished_at_before_change) %>
+          <% if same_day?(attendance.first_finished_at_before_change, attendance.worked_on) %>
             <%= format_time(attendance.first_finished_at_before_change) %>
           <% else %>
             <%= format_time(attendance.first_finished_at_before_change, true) %>
@@ -53,7 +53,7 @@
         </td>
         <td><%= format_time(attendance.started_at) %></td>
         <td>
-          <% if same_day?(attendance.started_at, attendance.finished_at) %>
+          <% if same_day?(attendance.finished_at, attendance.worked_on) %>
             <%= format_time(attendance.finished_at) %>
           <% else %>
           <%= format_time(attendance.finished_at, true) %>

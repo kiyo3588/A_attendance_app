@@ -116,12 +116,7 @@
             <% end %>
           </td>
           <td>
-            <% if day.finished_at.present? %>
-              <% if day.next_day %>
-                <%= "(翌日) " %>
-              <% end %>
-              <%= l(day.finished_at, format: :hour) %>
-            <% end %>
+            <%= format_time_hours(day.finished_at, day.next_day) %>
           </td>
           <td><%= l(day.finished_at, format: :minute) if day.finished_at.present? %></td>
           <td>
@@ -134,11 +129,7 @@
           </td>
           <td><%= day.note %></td>
           <td>
-          <% if day.next_day %>
-            <%= day.overtime_end_at ? "(翌日)" + day.overtime_end_at.strftime('%-H') : '' %>
-          <% else %>
-            <%= day.overtime_end_at ? day.overtime_end_at.strftime('%-H') : '' %>
-          <% end %>
+            <%= format_time_hours(day.overtime_end_at, day.next_day) %>
           </td>
           <td><%= day.overtime_end_at ? day.overtime_end_at.strftime('%M') : '' %></td>
           <td>

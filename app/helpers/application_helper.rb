@@ -19,4 +19,23 @@ module ApplicationHelper
       ""
     end
   end
+
+  def format_time_hours(time, next_day_check=false) #翌日チェック○○時表記
+    return unless time
+
+    format_string = next_day_check ? "(翌日) %-H" : "%-H"
+    time.strftime(format_string)
+  end
+
+  def format_time(time, next_day_check=false) #翌日チェック○○時○○分表記
+    return unless time
+
+    format_string = next_day_check ? "(翌日) %-H:%M" : "%-H:%M"
+    time.strftime(format_string)
+  end
+
+  def same_day?(start_time, worked_on) #翌日チェックでも同日の場合　
+    return unless  start_time && worked_on
+    start_time.to_date == worked_on.to_date
+  end
 end

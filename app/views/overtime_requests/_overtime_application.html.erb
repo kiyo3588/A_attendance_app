@@ -26,11 +26,7 @@
                     <td><%= overtime_request.worked_on.strftime("%-m/%-d") %></td>  
                     <td><%= $days_of_the_week[overtime_request.worked_on.wday] %></td>
                     <td>
-                      <% if overtime_request.next_day? %>
-                        翌日 <%= overtime_request.overtime_end_at.strftime("%H:%M") if overtime_request.overtime_end_at.present? %>
-                      <% else %>
-                        <%= overtime_request.overtime_end_at.strftime("%H:%M") if overtime_request.overtime_end_at.present? %>
-                      <% end %>
+                      <%= format_time(overtime_request.overtime_end_at, overtime_request.next_day?) %>
                     </td>
                     <td><%= overtime_request.user.designated_work_end_time.strftime("%H:%M") if overtime_request.user.designated_work_end_time.present? %></td>
                     <%

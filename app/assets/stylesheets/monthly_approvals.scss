@@ -1,12 +1,10 @@
 // Place all the styles related to the MonthlyApprovals controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-.custom-select {
-  width: 500px; /* ここに適切な幅を指定してください */
+.custom-modal .modal-dialog {
+  max-width: 100%; /* モーダルの最大幅を変更 */
 }
 
-
-
-
-
-
+.custom-modal .modal-content {
+  padding: 20px; /* モーダルの内部のパディングを調整 */
+}

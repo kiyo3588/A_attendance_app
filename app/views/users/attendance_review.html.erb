@@ -62,7 +62,7 @@
             <td><%= l(day.started_at, format: :hour) if day.started_at.present? %></td>
             <td><%= l(day.started_at, format: :minute) if day.started_at.present? %></td>
             <td></td>
-            <td><%= l(day.finished_at, format: :hour) if day.finished_at.present? %></td>
+            <td><%= format_time_hours(day.finished_at, day.finished_at.present? && day.finished_at > day.worked_on.end_of_day) %></td>
             <td><%= l(day.finished_at, format: :minute) if day.finished_at.present? %></td>
             <td>
               <% if day.started_at.present? && day.finished_at.present? %>
@@ -74,13 +74,7 @@
             </td>
             <td><%= day.note %></td>
             <td>
-              <% if day.overtime_end_at %>
-                <% if day.overtime_end_at > day.worked_on.end_of_day %>
-                  (翌日)<%= day.overtime_end_at.strftime('%H')%>
-                <% else %>
-                  <%= day.overtime_end_at ? day.overtime_end_at.strftime('%H') : '' %>
-                <% end %>
-              <% end %>
+              <%= format_time_hours(day.overtime_end_at, day.overtime_end_at.present? && day.overtime_end_at > day.worked_on.end_of_day) %>
             </td>
             <td><%= day.overtime_end_at ? day.overtime_end_at.strftime('%M') : '' %></td>
             <td>

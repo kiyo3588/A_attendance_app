@@ -40,17 +40,35 @@
                       <tr>
                         <td><%= l(attendance_request.worked_on, format: :short) %></td>
                         <td><%= $days_of_the_week[attendance_request.worked_on.wday] %></td>
-                        <td><%= attendance_request.started_at_before_change&.strftime('%-H') %></td>
+                        <td>
+                          <% if same_day?(attendance_request.started_at_before_change, attendance_request.worked_on) %>
+                            <%= format_time_hours(attendance_request.started_at_before_change) %>
+                          <% else %>
+                            <%= format_time_hours(attendance_request.started_at_before_change, true) %>
+                          <% end %>
+                        </td>
                         <td><%= attendance_request.started_at_before_change&.strftime('%M') %></td>
-                        <td><%= attendance_request.finished_at_before_change&.strftime('%-H') %></td>
+                        <td>
+                          <% if same_day?(attendance_request.finished_at_before_change, attendance_request.worked_on) %>
+                            <%= format_time_hours(attendance_request.finished_at_before_change) %>
+                          <% else %>
+                            <%= format_time_hours(attendance_request.finished_at_before_change, true) %>
+                          <% end %>
+                        </td>
                         <td><%= attendance_request.finished_at_before_change&.strftime('%M') %></td>
-                        <td><%= attendance_request.started_at.strftime('%-H') %></td>
+                        <td>
+                          <% if same_day?(attendance_request.started_at, attendance_request.worked_on) %>
+                            <%= format_time_hours(attendance_request.started_at) %>
+                          <% else %>
+                            <%= format_time_hours(attendance_request.started_at, true) %>
+                          <% end %>
+                        </td>
                         <td><%= attendance_request.started_at.strftime('%M') %></td>
                         <td>
-                          <% if attendance_request.next_day %>
-                            (翌日) <%= attendance_request.finished_at.strftime('%-H') %>
+                          <% if same_day?(attendance_request.finished_at, attendance_request.worked_on) %>
+                            <%= format_time_hours(attendance_request.finished_at) %>
                           <% else %>
-                            <%= attendance_request.finished_at.strftime('%-H') %>
+                            <%= format_time_hours(attendance_request.finished_at, true) %>
                           <% end %>
                         </td>
                         <td><%= attendance_request.finished_at.strftime('%M') %></td>
