@@ -6,6 +6,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :users do  # CSV出力用のルートを追加
+    member do
+      get :export_csv # CSV出力用のアクション名を選択
+    end
+  end
+
   get 'bases/index'
 
   root 'static_pages#top'

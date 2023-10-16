@@ -59,6 +59,7 @@ GEM
     coffee-script-source (1.12.2)
     concurrent-ruby (1.2.2)
     crass (1.0.6)
+    csv (3.2.7)
     date (3.3.3)
     erubi (1.12.0)
     execjs (2.8.1)
@@ -202,6 +203,7 @@ DEPENDENCIES
   bootstrap-will_paginate
   byebug
   coffee-rails (~> 4.2)
+  csv
   faker
   jbuilder (~> 2.5)
   jquery-rails

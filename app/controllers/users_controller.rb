@@ -1,3 +1,5 @@
+require 'csv'
+
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info]
   before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :working_employees]
@@ -124,6 +126,40 @@ class UsersController < ApplicationController
     User.import(params[:file])
     flash[:success] = "ユーザーを追加しました。"
     redirect_to users_path
+  end
+
+  def export_csv
+    @user = User.find(params[:id])
+    year = params[:year].to_i
+    month = params[:month].to_i
+    start_date = Date.new(year, month, 1)
+    end_date = start_date.end_of_month
+    @attendances = @user.attendances.where(worked_on: start_date..end_date)
+
+    respond_to do |format|
+      format.csv do
+        # CSV出力の処理を記述
+        csv_data = CSV.generate(headers: true) do |csv|
+          # ユーザーの勤怠情報をCSVに出力する例：
+          csv << ["日付", "出社時間", "退社時間"]
+
+          @attendances.each do |attendance|
+            if attendance.attendance_status == "attendance_approved"
+              csv << [
+                attendance.worked_on,
+                attendance.started_at,
+                attendance.finished_at
+              ]
+            else
+              csv << [attendance.worked_on, nil, nil]
+            end
+          end
+        end
+
+        filename = "#{@user.name}#{I18n.l(start_date, format: :middle)}分勤怠情報.csv" # ファイル名を動的に生成
+        send_data csv_data, filename: filename, type: "text/csv"
+      end
+    end
   end
 
   def attendance_review

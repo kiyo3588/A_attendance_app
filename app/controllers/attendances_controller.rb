@@ -155,6 +155,10 @@ class AttendancesController < ApplicationController
     flash[:success] = "履歴ログをリセットしました。"
     redirect_to approved_logs_user_attendance_path(@user)
   end
+
+  def approve_attendance
+    update(attendance_status: :attendance_approved)
+  end
   
   private
     # 1ヶ月分の勤怠情報を扱います。
@@ -162,9 +166,6 @@ class AttendancesController < ApplicationController
       params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :next_day, :attendance_approver_id, :attendance_status, :approval_status])[:attendances]
     end
 
-    # def update_one_month_params
-    #   params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :attendance_status, :next_day, :attendance_approver_id])[:attendances]
-    # end
     # beforeフィルター
 
     # 管理権限者、または現在ログインしているユーザーを許可します。

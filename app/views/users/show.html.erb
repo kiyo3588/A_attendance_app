@@ -58,7 +58,7 @@
 
   <div class="d-flex justify-content-start mb-2">
     <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-primary" %>
-    <%= link_to "CSV出力", "#", class: "btn btn-primary me-2" %> <!-- "#"は仮のパスです -->
+    <%= link_to "CSV出力", export_csv_user_path(@user, year: @first_day.year, month: @first_day.month, format: :csv), class: "btn btn-primary me-2" %>
   </div>
   <div>
     <%= link_to "勤怠修正ログ(承認済み)", approved_logs_user_attendance_path(current_user), class: "btn btn-primary" %>
