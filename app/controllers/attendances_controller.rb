@@ -38,45 +38,44 @@ class AttendancesController < ApplicationController
         attendances_params.each do |id, item|
           @attendance = Attendance.find(id)
           @attendance.attendance_approver_id = item[:attendance_approver_id]
-          # next if item[:attendance_approver_id].blank?
-          worked_on_datetime = @attendance.worked_on.in_time_zone('Asia/Tokyo').to_datetime
+        
+          if @attendance.attendance_approver_id.present?  # 指示確認者が指定されている場合のみエラーチェックを行う
+  
+            worked_on_datetime = @attendance.worked_on.in_time_zone('Asia/Tokyo').to_datetime
       
-          started_hour, started_min = extract_time_from(item[:started_at])
-          finished_hour, finished_min = extract_time_from(item[:finished_at])
+            started_hour, started_min = extract_time_from(item[:started_at])
+            finished_hour, finished_min = extract_time_from(item[:finished_at])
 
-          if started_hour.nil?
-            item[:started_at] = nil
-          else
-            item[:started_at] = worked_on_datetime.change(hour: started_hour, min: started_min)
-          end
+            if started_hour.nil?
+              item[:started_at] = nil
+            else
+              item[:started_at] = worked_on_datetime.change(hour: started_hour, min: started_min)
+            end
 
-          if finished_hour.nil?
-            item[:finished_at] = nil
-          else
-            item[:finished_at] = worked_on_datetime.change(hour: finished_hour, min: finished_min)
-          end
-
-          if item[:next_day].to_i == 1
-            @attendance.next_day = true
-            worked_on_datetime = worked_on_datetime.advance(days: 1)
-
-            if item[:finished_at].present?
+            if finished_hour.nil?
+              item[:finished_at] = nil
+            else
               item[:finished_at] = worked_on_datetime.change(hour: finished_hour, min: finished_min)
             end
-          else
-            @attendance.next_day = false
-          end
 
-          if item[:started_at].present? && item[:finished_at].blank?
-            errors << "#{@attendance.worked_on}の退社時間が未入力です。"
-          elsif item[:started_at].blank? && item[:finished_at].present?
-            errors << "#{@attendance.worked_on}の出社時間が未入力です。"
-          else
-            
-            if @attendance.attendance_approver_id.blank?
-              
-            else           
-              # 送信された値（これはフォームから送信されたパラメータを取得する例です。実際の値に置き換えてください）
+            if item[:next_day].to_i == 1
+              @attendance.next_day = true
+              worked_on_datetime = worked_on_datetime.advance(days: 1)
+
+              if item[:finished_at].present?
+                item[:finished_at] = worked_on_datetime.change(hour: finished_hour, min: finished_min)
+              end
+            else
+              @attendance.next_day = false
+            end
+
+            if item[:started_at].present? && item[:finished_at].blank?
+              errors << "#{@attendance.worked_on}の退社時間が未入力です。"
+            elsif item[:started_at].blank? && item[:finished_at].present?
+              errors << "#{@attendance.worked_on}の出社時間が未入力です。"
+            else
+                     
+              # 送信された値（これはフォームから送信されたパラメータを取得）
               new_started_at = item[:started_at]
               new_finished_at = item[:finished_at]
               # 編集前の時間と送信された時間が同じであるかどうかをチェック
@@ -89,11 +88,8 @@ class AttendancesController < ApplicationController
                 @attendance.attendance_approver_id = item[:attendance_approver_id]
 
                 @attendance.attendance_pending!
-                @attendance.save!
-            
-              end
-            
-             
+                @attendance.save!           
+              end      
             end
           end
         end

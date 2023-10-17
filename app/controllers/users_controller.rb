@@ -156,7 +156,7 @@ class UsersController < ApplicationController
           end
         end
 
-        filename = "#{@user.name}#{I18n.l(start_date, format: :middle)}分勤怠情報.csv" # ファイル名を動的に生成
+        filename = "#{@user.name}の#{I18n.l(start_date, format: :middle)}分勤怠情報.csv" # ファイル名を動的に生成
         send_data csv_data, filename: filename, type: "text/csv"
       end
     end
