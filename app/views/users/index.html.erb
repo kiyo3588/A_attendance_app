@@ -4,11 +4,16 @@
 
 <div class="col-md-10 col-md-offset-1">
   <%= will_paginate %>
-  <%= form_with url: import_users_path, local: true do |f| %>  
-    <%= f.file_field :file %> <br>
-    <%= f.submit "CSVをインポート", class: "btn btn-md btn-primary" %>
-  <% end %>
-  
+  <div class="import-form">
+    <%= form_with url: import_users_path, local: true do |f| %> 
+      <div>
+        <%= f.file_field :file %>
+      </div>
+      <div>
+       <%= f.submit "CSVをインポート", class: "btn btn-md btn-primary" %>
+      </div>
+    <% end %>
+  </div>
   <table class="table table-condensed table-hover" id="table-users">
     <thead>
       <tr>
