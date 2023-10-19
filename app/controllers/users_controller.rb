@@ -124,9 +124,13 @@ class UsersController < ApplicationController
   end
 
   def import
-    User.import(params[:file])
-    flash[:success] = "ユーザーを追加しました。"
-    redirect_to users_path
+    if params[:file].present?
+      User.import(params[:file])
+      flash[:success] = "ユーザーを追加しました。"
+    else
+      flash[:danger] = "ファイルを選択してください"
+    end
+      redirect_to users_path
   end
 
   def export_csv

@@ -58,18 +58,32 @@ class MonthlyApprovalsController < ApplicationController
   end
 
   def update
+    success_count = 0
+    failure_count = 0
+  
     params[:monthly_requests].each do |id, monthly_request_params|
       attendance = Attendance.find(id)
-
+  
       if monthly_request_params["approval_status"] == "1"
-        attendance.update(monthly_approval_status: monthly_request_params["monthly_approval_status"])
-        
-        flash[:success] = "所属長承認申請の変更を行いました。"
-        redirect_to user_path(current_user)
+        if attendance.update(monthly_approval_status: monthly_request_params["monthly_approval_status"])
+          success_count += 1
+        else
+          failure_count += 1
+        end
       else
-        redirect_to user_path(current_user)
+        failure_count += 1
       end
     end
+  
+    if success_count > 0
+      flash[:success] = "#{success_count}件の所属長承認申請の変更を行いました。"
+    end
+  
+    if failure_count > 0
+      
+    end
+  
+    redirect_to user_path(current_user)
   end
 
   def monthly_approval

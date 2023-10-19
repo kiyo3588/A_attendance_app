@@ -56,10 +56,14 @@ class User < ApplicationRecord
 
   # CSVインポート
   def self.import(file)
-    CSV.foreach(file.path, headers: true, encoding: 'Shift_JIS:UTF-8') do |row|
-      user = find_by(id: row["id"]) || new
-      user.attributes = row.to_hash.slice(*updatable_attributes)
-      user.save!
+    if file.present? && file.respond_to?(:path)
+      CSV.foreach(file.path, headers: true, encoding: 'Shift_JIS:UTF-8') do |row|
+        user = find_by(id: row["id"]) || new
+        user.attributes = row.to_hash.slice(*updatable_attributes)
+        user.save!
+      end
+    else
+      
     end
   end
 
