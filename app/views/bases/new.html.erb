@@ -1,3 +1,14 @@
+<% if @base.errors.any? %>
+  <div id="error_explanation">
+    <h2><%= pluralize(@base.errors.count, "error") %> prohibited this base from being saved:</h2>
+    <ul>
+    <% @base.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+
 <% provide(:title, "新規拠点追加") %>
 
 <div class="container">
