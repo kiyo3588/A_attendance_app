@@ -92,13 +92,13 @@
 /* ユーザー一覧*/
 
 .import-form {
-  padding-top: 20px;
+  padding-top: 10px;
   padding-bottom: 30px;
 }
 
 /* ファイル名表示用の領域を広げるスタイル */
   .import-form input[type="file"] {
     width: 100%; /* 幅を100%に設定して親要素に合わせる */
-    padding: 5px; /* パディングを追加して見た目を調整（必要に応じて調整） */
+    padding-bottom: 10px; /* パディングを追加して見た目を調整（必要に応じて調整） */
     box-sizing: border-box; /* パディングを要素の内部に含める */
 }

@@ -58,12 +58,13 @@ class User < ApplicationRecord
   def self.import(file)
     if file.present? && file.respond_to?(:path)
       CSV.foreach(file.path, headers: true, encoding: 'Shift_JIS:UTF-8') do |row|
-        user = find_by(id: row["id"]) || new
+        existing_user = User.find_by(email: row["email"]) # メールアドレスをキーにして既存のユーザーを探す
+        unless existing_user
+        user = User.new
         user.attributes = row.to_hash.slice(*updatable_attributes)
         user.save!
+        end
       end
-    else
-      
     end
   end
 
