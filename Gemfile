@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+ruby '2.7.8'
 gem 'rails',        '~> 5.1.6'
 gem 'roo'
 gem 'csv'
